@@ -1,0 +1,19 @@
+{
+  "name": "shida",
+  "version": "1.0.0",
+  "description": "Interactive Frida Shell for Researchers",
+  "main": "index.js",
+  "scripts": {
+    "build": "frida-compile agent/index.ts -o dist/_agent.js -c",
+    "watch": "frida-compile agent/index.ts -o dist/_agent.js -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/frida-gum": "^18.7.0",
+    "@types/node": "^22.5.4",
+    "frida-compile": "^16.4.1",
+    "typescript": "^5.5.4"
+  }
+}
