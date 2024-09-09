@@ -1,1 +1,4 @@
-console.log("Hello, Frida!");
+import {ShidaCli} from './cli.js';
+
+// @ts-ignore
+global.shida = new ShidaCli();
