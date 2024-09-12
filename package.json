@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "frida-compile agent/index.ts -o dist/_agent.js -c",
-    "watch": "frida-compile agent/index.ts -o dist/_agent.js -w"
+    "watch": "frida-compile agent/index.ts -o dist/_agent.js -w",
+    "frida": "npm run build && frida -U -l dist/_agent.js"
   },
   "keywords": [],
   "author": "",

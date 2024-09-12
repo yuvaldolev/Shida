@@ -1,4 +1,6 @@
-export class NativeLogcatLogger {
+import {LogcatLogger} from '../logger/index.js';
+
+export class NativeLogcatLogger implements LogcatLogger {
   static readonly LOGCAT_PRIORITY_VERBOSE = 2;
 
   private readonly androidLogWriteFunction = new NativeFunction(

@@ -1,16 +1,21 @@
-import {JavaCli} from './java/index.js';
+import {JavaCli, JavaInitializer} from './java/index.js';
 import {ConsoleSink, LogcatSink, Logger} from './logger/index.js';
 
 export class ShidaCli {
   readonly java?: JavaCli = undefined;
 
-  private readonly logcatLogger = new Logger(new LogcatSink('shida'));
-  private readonly consoleLogger = new Logger(new ConsoleSink());
+  readonly #javaInitializer = new JavaInitializer();
 
   constructor() {
+    this.#javaInitializer.initialize();
+
+    const logcatLogger = new Logger(new LogcatSink('shida'));
+    const consoleLogger = new Logger(new ConsoleSink());
+
     if (Java.available) {
-      Java.perform(() => {});
-      this.java = new JavaCli(this.logcatLogger, this.consoleLogger);
+      this.java = new JavaCli(logcatLogger, consoleLogger);
     }
+
+    logcatLogger.log('bla bla bla');
   }
 }
