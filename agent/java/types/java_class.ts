@@ -6,4 +6,5 @@ export type JavaClass = {
   getDeclaredFields: () => JavaField[];
   getDeclaredMethods: () => JavaMethod[];
   getSimpleName: () => string;
+  equals: (clazz: JavaClass) => boolean;
 };

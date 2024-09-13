@@ -1,3 +1,5 @@
+import {JavaClass} from './index.js';
+
 export type JavaMethod = {
-  getName: () => string;
+  getName: () => string; getReturnType: () => JavaClass;
 };

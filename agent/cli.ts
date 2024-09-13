@@ -9,11 +9,11 @@ export class ShidaCli {
   constructor() {
     this.#javaInitializer.initialize();
 
-    const logcatLogger = new Logger(new LogcatSink('shida'));
     const consoleLogger = new Logger(new ConsoleSink());
+    const logcatLogger = new Logger(new LogcatSink('shida'));
 
     if (Java.available) {
-      this.java = new JavaCli(logcatLogger, consoleLogger);
+      this.java = new JavaCli(consoleLogger, logcatLogger);
     }
   }
 }
