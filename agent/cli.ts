@@ -15,7 +15,5 @@ export class ShidaCli {
     if (Java.available) {
       this.java = new JavaCli(logcatLogger, consoleLogger);
     }
-
-    logcatLogger.log('bla bla bla');
   }
 }
