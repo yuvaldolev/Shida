@@ -1,9 +1,13 @@
 import {Logger} from '../../logger/index.js';
+import {Hooker} from '../hooker.js';
 import {JavaProcess} from '../java_process.js';
+import {Reflection} from '../reflection.js';
 import {Tracer} from '../tracer.js';
 
 export class TracingCli {
   readonly #tracer = new Tracer();
+  readonly #reflection = new Reflection();
+  readonly #hooker = new Hooker();
   readonly #process = new JavaProcess();
   readonly #consoleLogger: Logger;
   readonly #logcatLogger: Logger;
@@ -14,7 +18,7 @@ export class TracingCli {
   }
 
   traceMethod(
-      className: string, methodName: string, backtrace: boolean = false) {
+      className: string, methodName: string, backtrace: boolean = false): void {
     const clazz = Java.use(className);
 
     const method = clazz[methodName];
@@ -26,9 +30,43 @@ export class TracingCli {
         clazz,
         method,
         backtrace,
-        overload => this.#consoleLogger.log(`Start tracing: ${overload}`),
+        overload => this.#consoleLogger.log(`Started tracing ${overload}`),
+        (overload, error) =>
+            this.#consoleLogger.log(`Failed tracing ${overload}: ${error}`),
         trace => this.#logcatLogger.logFromThread(
             trace, this.#process.getCurrentThreadId()),
+    );
+  }
+
+  traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
+      void {
+    this.#reflection.forEachClassMethod(
+        Java.use(name),
+        (_, method) => this.traceMethod(name, method.getName(), backtrace),
+        regex);
+  }
+
+  stopTracingMethod(className: string, methodName: string): void {
+    const clazz = Java.use(className);
+
+    const method = clazz[methodName];
+    if (typeof method === 'undefined') {
+      return;
+    }
+
+    this.#hooker.unhookMethod(
+        method,
+        overload => this.#consoleLogger.log(`Unhooked ${overload}`),
+        (overload, error) =>
+            this.#consoleLogger.log(`Failed tracing ${overload}: ${error}`),
+    );
+  }
+
+  stopTracingClassMethods(name: string, regex?: string) {
+    this.#reflection.forEachClassMethod(
+        Java.use(name),
+        (_, method) => this.stopTracingMethod(name, method.getName()),
+        regex,
     );
   }
 }

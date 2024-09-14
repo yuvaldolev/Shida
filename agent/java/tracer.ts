@@ -5,48 +5,56 @@ export class Tracer {
   traceMethod(
       clazz: Java.Wrapper, method: Java.Wrapper, backtrace: boolean,
       onStartTracing: (overload: Java.Wrapper) => void,
-      onTrace: (trace: string) => void) {
+      onErrorTracing: (overload: Java.Wrapper, error: any) => void,
+      onTrace: (trace: string) => void): void {
     method.overloads.forEach(
         (overload: Java.Wrapper) => this.traceMethodOverload(
-            clazz, overload, backtrace, onStartTracing, onTrace));
+            clazz, overload, backtrace, onStartTracing, onErrorTracing,
+            onTrace));
   }
 
   private traceMethodOverload(
       clazz: Java.Wrapper, overload: Java.Wrapper, backtrace: boolean,
       onStartTracing: (overload: Java.Wrapper) => void,
+      onErrorTracing: (overload: Java.Wrapper, error: any) => void,
       onTrace: (trace: string) => void): void {
     const tracer = this;
 
-    onStartTracing(overload);
+    try {
+      overload.implementation = function(...args: any[]) {
+        const returnValue = overload.apply(this, args);
 
-    overload.implementation = function(...args: any[]) {
-      const returnValue = overload.apply(this, args);
+        let trace = `${clazz.class.getSimpleName()}.${overload.methodName}(`;
 
-      let trace = `${clazz.class.getSimpleName()}.${overload.methodName}(`;
+        for (let argumentIndex = 0; argumentIndex < args.length;
+             ++argumentIndex) {
+          if (argumentIndex > 0) {
+            trace = `${trace}, `;
+          }
 
-      for (let argumentIndex = 0; argumentIndex < args.length;
-           ++argumentIndex) {
-        if (argumentIndex > 0) {
-          trace = `${trace}, `;
+          trace = `${trace}${args[argumentIndex]}`;
         }
 
-        trace = `${trace}${args[argumentIndex]}`;
-      }
+        trace = `${trace})`;
 
-      trace = `${trace})`;
+        if ('void' !== overload.returnType.className) {
+          trace = `${trace} => ${returnValue}`;
+        }
 
-      if ('void' !== overload.returnType.className) {
-        trace = `${trace} => ${returnValue}`;
-      }
+        if (backtrace) {
+          trace = `${trace}\nBacktrace:\n${tracer.getBacktrace()}`;
+        }
 
-      if (backtrace) {
-        trace = `${trace}\nBacktrace:\n${tracer.getBacktrace()}`;
-      }
+        onTrace(trace);
 
-      onTrace(trace);
+        return returnValue;
+      };
+    } catch (e) {
+      onErrorTracing(overload, e);
+      return;
+    }
 
-      return returnValue;
-    };
+    onStartTracing(overload);
   }
 
   private getBacktrace(): string {
