@@ -9,20 +9,20 @@ export class Tracer {
       onTrace: (trace: string) => void): void {
     method.overloads.forEach(
         (overload: Java.Wrapper) => this.traceMethodOverload(
-            clazz, overload, backtrace, onStartTracing, onErrorTracing,
+            clazz, method, overload, backtrace, onStartTracing, onErrorTracing,
             onTrace));
   }
 
   private traceMethodOverload(
-      clazz: Java.Wrapper, overload: Java.Wrapper, backtrace: boolean,
-      onStartTracing: (overload: Java.Wrapper) => void,
+      clazz: Java.Wrapper, method: Java.Wrapper, overload: Java.Wrapper,
+      backtrace: boolean, onStartTracing: (overload: Java.Wrapper) => void,
       onErrorTracing: (overload: Java.Wrapper, error: any) => void,
       onTrace: (trace: string) => void): void {
     const tracer = this;
 
     try {
       overload.implementation = function(...args: any[]) {
-        const returnValue = overload.apply(this, args);
+        const returnValue = method.apply(this, args);
 
         let trace = `${clazz.class.getSimpleName()}.${overload.methodName}(`;
 

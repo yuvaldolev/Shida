@@ -10,6 +10,12 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
+  listClassConstructors(name: string): void {
+    const clazz = Java.use(name);
+    clazz.$init.overloads.forEach(
+        (overload: Java.Method) => this.#consoleLogger.log(overload));
+  }
+
   listClassMethods(name: string, regex?: string): void {
     this.#reflection.forEachClassMethod(Java.use(name), (method, _) => {
       method.overloads.forEach(

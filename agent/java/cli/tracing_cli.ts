@@ -38,6 +38,10 @@ export class TracingCli {
     );
   }
 
+  traceClassConstructors(name: string, backtrace: boolean = false): void {
+    this.traceMethod(name, '$init', backtrace);
+  }
+
   traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
       void {
     this.#reflection.forEachClassMethod(
