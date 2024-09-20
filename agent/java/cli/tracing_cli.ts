@@ -17,6 +17,13 @@ export class TracingCli {
     this.#logcatLogger = logcatLogger;
   }
 
+  /**
+   * Traces a class method - including all its overloads.
+   * @param className - The name of the class of which method will be traced.
+   * @param methodName - The name of the method to trace.
+   * @param backtrace - Whether to display a backtrace after each trace. By
+   * default, false.
+   */
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
     const clazz = Java.use(className);

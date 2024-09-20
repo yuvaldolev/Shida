@@ -1,3 +1,4 @@
+import {cli} from '../../decorators/index.js';
 import {Logger} from '../../logger/index.js';
 import {Reflection} from '../reflection.js';
 import {JavaObject} from '../types/index.js';
@@ -10,6 +11,17 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
+  @cli(
+      'Lists a class\'s constructors',
+      [
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'The class\'s name',
+        },
+      ],
+      )
   listClassConstructors(name: string): void {
     const clazz = Java.use(name);
     clazz.$init.overloads.forEach(
