@@ -1,9 +1,10 @@
+import {documentClass, documentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
-import {manClass, manMethod} from '../../man/index.js';
 import {Reflection} from '../reflection.js';
 import {JavaObject} from '../types/index.js';
 
-@manClass('Performs Reflection-based operations on Java types')
+@documentClass(
+    'Reflection', 'Performs Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
   readonly #consoleLogger: Logger;
@@ -12,14 +13,14 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
-  @manMethod(
-      'Lists a class\'s constructors',
+  @documentMethod(
+      'Lists class constructors',
       [
         {
           name: 'name',
           type: 'string',
           optional: false,
-          description: 'The class\'s name',
+          description: 'Class name',
         },
       ],
       )
@@ -29,14 +30,14 @@ export class ReflectionCli {
         (overload: Java.Method) => this.#consoleLogger.log(overload));
   }
 
-  @manMethod(
-      'Lists a class\'s methods',
+  @documentMethod(
+      'Lists class methods',
       [
         {
           name: 'name',
           type: 'string',
           optional: false,
-          description: 'The class\'s name',
+          description: 'Class name',
         },
         {
           name: 'regex',
@@ -53,14 +54,14 @@ export class ReflectionCli {
     }, regex);
   }
 
-  @manMethod(
-      'Retieves all instances of a class from the JVM',
+  @documentMethod(
+      'Retieves all class instances from the JVM',
       [
         {
           name: 'name',
           type: 'string',
           optional: false,
-          description: 'The class\'s name',
+          description: 'Class name',
         },
       ],
       {

@@ -1,11 +1,14 @@
+import {ClassDocumentationGenerator, documentClass, MethodDocumentationGenerator} from './documentation/index.js';
 import {JavaCli, JavaInitializer} from './java/index.js';
 import {ConsoleSink, LogcatSink, Logger} from './logger/index.js';
-import {ManPage} from './man/index.js';
 
+@documentClass('Shida', 'Shida APIs')
 export class ShidaCli {
   readonly java?: JavaCli = undefined;
 
   readonly #javaInitializer = new JavaInitializer();
+  readonly #classDocumentationGenerator = new ClassDocumentationGenerator();
+  readonly #methodDocumentationGenerator = new MethodDocumentationGenerator();
   readonly #consoleLogger: Logger;
 
   constructor() {
@@ -19,7 +22,21 @@ export class ShidaCli {
     }
   }
 
-  man(manPage: ManPage): void {
-    this.#consoleLogger.log(manPage._manPage);
+  man(o: any): void {
+    const prototype = Object.getPrototypeOf(o);
+
+    // @ts-ignore
+    if (global._shida_documentation.classes.has(prototype)) {
+      this.#consoleLogger.log(this.#classDocumentationGenerator.generate(
+          // @ts-ignore
+          o, global._shida_documentation.classes.get(prototype)));
+    }
+
+    // @ts-ignore.
+    if (global._shida_documentation.methods.has(o)) {
+      this.#consoleLogger.log(this.#methodDocumentationGenerator.generate(
+          // @ts-ignore
+          global._shida_documentation.methods.get(o)));
+    }
   }
 }
