@@ -1,4 +1,4 @@
-import {ClassDocumentationGenerator, documentClass, MethodDocumentationGenerator} from './documentation/index.js';
+import {ClassDocumentationGenerator, documentClass, documentMethod, MethodDocumentationGenerator} from './documentation/index.js';
 import {JavaCli, JavaInitializer} from './java/index.js';
 import {ConsoleSink, LogcatSink, Logger} from './logger/index.js';
 
@@ -22,6 +22,17 @@ export class ShidaCli {
     }
   }
 
+  @documentMethod(
+      'Display Shida class/method documentation',
+      [
+        {
+          name: 'o',
+          type: 'any',
+          optional: false,
+          description: 'Object to display documentation for'
+        },
+      ],
+      )
   man(o: any): void {
     const prototype = Object.getPrototypeOf(o);
 
