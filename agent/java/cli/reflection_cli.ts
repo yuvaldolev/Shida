@@ -73,12 +73,40 @@ export class ReflectionCli {
     return this.#reflection.getClassInstances(name);
   }
 
+  @documentMethod(
+      'Dumps an object field and its value to the console',
+      [
+        {
+          name: 'instance',
+          type: 'JavaObject',
+          optional: false,
+          description: 'Instance to dump',
+        },
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'Name of field to dump',
+        },
+      ],
+      )
   dumpObjectField(instance: JavaObject, name: string): void {
     this.#consoleLogger.logField(
         instance.getClass(), name,
         this.#reflection.getObjectField(instance, name));
   }
 
+  @documentMethod(
+      'Dumps all object fields and their values to the console',
+      [
+        {
+          name: 'instance',
+          type: 'JavaObject',
+          optional: false,
+          description: 'Instance to dump',
+        },
+      ],
+      )
   dumpAllObjectFields(
       instance: JavaObject,
       ): void {
