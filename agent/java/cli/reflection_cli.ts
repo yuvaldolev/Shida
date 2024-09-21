@@ -4,7 +4,7 @@ import {Reflection} from '../reflection.js';
 import {JavaObject} from '../types/index.js';
 
 @documentClass(
-    'Reflection', 'Performs Reflection-based operations on Java types')
+    'Reflection', 'Perform Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
   readonly #consoleLogger: Logger;

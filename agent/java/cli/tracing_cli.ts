@@ -1,9 +1,11 @@
+import {documentClass, documentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {Hooker} from '../hooker.js';
 import {JavaProcess} from '../java_process.js';
 import {Reflection} from '../reflection.js';
 import {Tracer} from '../tracer.js';
 
+@documentClass('Tracing', 'Trace Java class methods')
 export class TracingCli {
   readonly #tracer = new Tracer();
   readonly #reflection = new Reflection();
@@ -17,13 +19,31 @@ export class TracingCli {
     this.#logcatLogger = logcatLogger;
   }
 
-  /**
-   * Traces a class method - including all its overloads.
-   * @param className - The name of the class of which method will be traced.
-   * @param methodName - The name of the method to trace.
-   * @param backtrace - Whether to display a backtrace after each trace. By
-   * default, false.
-   */
+  @documentMethod(
+      `Trace a class method.
+Log each method invocation with the arguments and return value`,
+      [
+        {
+          name: 'className',
+          type: 'string',
+          optional: false,
+          description: 'Name of class to trace',
+        },
+        {
+          name: 'methodName',
+          type: 'string',
+          optional: false,
+          description: 'Name of method to trace',
+        },
+        {
+          name: 'backtrace',
+          type: 'boolean',
+          optional: true,
+          description: 'Display a backtrace after each trace',
+          defaultValue: false,
+        },
+      ],
+      )
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
     const clazz = Java.use(className);
@@ -45,10 +65,55 @@ export class TracingCli {
     );
   }
 
+  @documentMethod(
+      `Trace all class constructors.
+Log each constructor invocation with the arguments and return value`,
+      [
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'Name of class to trace',
+        },
+        {
+          name: 'backtrace',
+          type: 'boolean',
+          optional: true,
+          description: 'Display a backtrace after each trace',
+          defaultValue: false,
+        },
+      ],
+      )
   traceClassConstructors(name: string, backtrace: boolean = false): void {
     this.traceMethod(name, '$init', backtrace);
   }
 
+  @documentMethod(
+      `Trace all class methods.
+Log each method invocation with the arguments and return value`,
+      [
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'Name of class to trace',
+        },
+        {
+          name: 'regex',
+          type: 'string',
+          optional: true,
+          description: `Regex to filter methods to trace.
+  If not specified, all methods will be traced`,
+        },
+        {
+          name: 'backtrace',
+          type: 'boolean',
+          optional: true,
+          description: 'Display a backtrace after each trace',
+          defaultValue: false,
+        },
+      ],
+      )
   traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
       void {
     this.#reflection.forEachClassMethod(
@@ -57,6 +122,23 @@ export class TracingCli {
         regex);
   }
 
+  @documentMethod(
+      'Stop tracing a class method',
+      [
+        {
+          name: 'className',
+          type: 'string',
+          optional: false,
+          description: 'Name of class to stop tracing',
+        },
+        {
+          name: 'methodName',
+          type: 'string',
+          optional: false,
+          description: 'Name of method to stop tracing',
+        },
+      ],
+      )
   stopTracingMethod(className: string, methodName: string): void {
     const clazz = Java.use(className);
 
@@ -73,6 +155,24 @@ export class TracingCli {
     );
   }
 
+  @documentMethod(
+      'Stop tracing all class methods',
+      [
+        {
+          name: 'className',
+          type: 'string',
+          optional: false,
+          description: 'Name of class to stop tracing',
+        },
+        {
+          name: 'regex',
+          type: 'string',
+          optional: true,
+          description: `Regex to filter methods to stop tracing.
+  If not specified, all method traces will be stopped`,
+        },
+      ],
+      )
   stopTracingClassMethods(name: string, regex?: string) {
     this.#reflection.forEachClassMethod(
         Java.use(name),
