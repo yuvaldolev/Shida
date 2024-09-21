@@ -1,8 +1,9 @@
-import {cli} from '../../decorators/index.js';
 import {Logger} from '../../logger/index.js';
+import {manClass, manMethod} from '../../man/index.js';
 import {Reflection} from '../reflection.js';
 import {JavaObject} from '../types/index.js';
 
+@manClass('Performs Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
   readonly #consoleLogger: Logger;
@@ -11,7 +12,7 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
-  @cli(
+  @manMethod(
       'Lists a class\'s constructors',
       [
         {
@@ -28,6 +29,23 @@ export class ReflectionCli {
         (overload: Java.Method) => this.#consoleLogger.log(overload));
   }
 
+  @manMethod(
+      'Lists a class\'s methods',
+      [
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'The class\'s name',
+        },
+        {
+          name: 'regex',
+          type: 'string',
+          optional: true,
+          description: 'Regex to filter the class methods',
+        },
+      ],
+      )
   listClassMethods(name: string, regex?: string): void {
     this.#reflection.forEachClassMethod(Java.use(name), (method, _) => {
       method.overloads.forEach(
@@ -35,6 +53,21 @@ export class ReflectionCli {
     }, regex);
   }
 
+  @manMethod(
+      'Retieves all instances of a class from the JVM',
+      [
+        {
+          name: 'name',
+          type: 'string',
+          optional: false,
+          description: 'The class\'s name',
+        },
+      ],
+      {
+        'type': 'JavaObject[]',
+        description: 'The retrieved class instances',
+      },
+      )
   getClassInstances(name: string): JavaObject[] {
     return this.#reflection.getClassInstances(name);
   }
