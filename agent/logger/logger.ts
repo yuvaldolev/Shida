@@ -34,7 +34,7 @@ export class Logger {
                  .join('\n'));
   }
 
-  logField(clazz: JavaClass, name: string, value: JavaObject): void {
+  logField(clazz: JavaClass, name: string, value: JavaObject|null): void {
     this.log(`${clazz.getSimpleName()}.${name} = ${value}`);
   }
 

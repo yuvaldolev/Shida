@@ -7,4 +7,5 @@ export type JavaClass = {
   getDeclaredMethods: () => JavaMethod[];
   getSimpleName: () => string;
   equals: (clazz: JavaClass) => boolean;
+  getSuperclass: () => JavaClass;
 };

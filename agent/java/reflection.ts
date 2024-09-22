@@ -1,16 +1,20 @@
-import {JavaMethod, JavaObject} from './types/index.js';
+import {JavaClass, JavaMethod, JavaObject} from './types/index.js';
 
 export class Reflection {
-  getObjectField(instance: JavaObject, fieldName: string): JavaObject {
-    const field = instance.getClass().getDeclaredField(fieldName);
-    const accessible = field.isAccessible();
+  private readonly objectClass = Java.use('java.lang.Object').class;
 
-    try {
-      field.setAccessible(true);
-      return field.get(instance);
-    } finally {
-      field.setAccessible(accessible);
+  getObjectField(instance: JavaObject, fieldName: string): JavaObject|null {
+    let clazz = instance.getClass();
+
+    while (clazz != null) {
+      try {
+        return this.getObjectDeclaredField(clazz, instance, fieldName);
+      } catch (e) {
+        clazz = clazz.getSuperclass();
+      }
     }
+
+    throw new Error(`No field '${fieldName}' in object ${instance}`);
   }
 
   getClassInstances(name: string): JavaObject[] {
@@ -41,6 +45,20 @@ export class Reflection {
       }
 
       callback(method, reflectedMethod);
+    }
+  }
+
+  private getObjectDeclaredField(
+      clazz: JavaClass, instance: JavaObject, fieldName: string): JavaObject
+      |null {
+    const field = clazz.getDeclaredField(fieldName);
+    const accessible = field.isAccessible();
+
+    try {
+      field.setAccessible(true);
+      return field.get(instance);
+    } finally {
+      field.setAccessible(accessible);
     }
   }
 }
