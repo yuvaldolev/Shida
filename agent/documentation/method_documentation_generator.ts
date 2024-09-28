@@ -8,7 +8,7 @@ export class MethodDocumentationGenerator {
     documentation = `${documentation}${descriptor.getDescription()}.\n`;
 
     const parameters = descriptor.getParameters();
-    if (0 !== parameters.length) {
+    if ((typeof parameters !== 'undefined') && (0 !== parameters.length)) {
       documentation = `${documentation}\n${
           MethodDocumentationGenerator.generateParametersDocumentation(
               parameters)}`;

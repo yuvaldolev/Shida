@@ -80,9 +80,14 @@ export class ClassDocumentationGenerator {
 
     // @ts-ignore
     if (global._shida_documentation.methods.has(method)) {
-      documentation = `${documentation}\n  ${
-          // @ts-ignore
-          global._shida_documentation.methods.get(method).getDescription()}.`;
+      // @ts-ignore
+      const description = global._shida_documentation.methods.get(method)
+                              .getDescription()
+                              .split('\n')
+                              .map((line: string) => `  ${line}`)
+                              .join('\n');
+
+      documentation = `${documentation}\n${description}.`;
     }
 
     documentation = `${documentation}\n`;

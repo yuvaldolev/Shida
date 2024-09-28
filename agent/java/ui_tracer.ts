@@ -1,9 +1,11 @@
+import {Hooker} from './hooker.js';
 import {Reflection} from './reflection.js';
 import {JavaObject} from './types/index.js';
 
 export class UiTracer {
   private readonly viewClass = Java.use('android.view.View');
   private readonly reflection = new Reflection();
+  private readonly hooker = new Hooker();
 
   traceClicks(onClick: (view: JavaObject, listener: JavaObject|null) => void):
       void {
@@ -14,7 +16,7 @@ export class UiTracer {
       const returnValue = performClickMethod.call(this);
 
       let listener: JavaObject|null = null;
-      const listenerInfo = reflection.getObjectField(this, 'mListenerInfoo');
+      const listenerInfo = reflection.getObjectField(this, 'mListenerInfo');
       if (listenerInfo !== null) {
         listener = reflection.getObjectField(listenerInfo, 'mOnClickListener');
       }
@@ -34,5 +36,13 @@ export class UiTracer {
 
       return returnValue;
     }
+  }
+
+  stopTracingClicks(): void {
+    this.hooker.unhookMethod(this.viewClass.performClick);
+  }
+
+  stopTracingTouches(): void {
+    this.hooker.unhookMethod(this.viewClass.onTouchEvent);
   }
 }

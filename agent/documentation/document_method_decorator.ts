@@ -4,7 +4,7 @@ import {MethodParameterDocumentationDescriptor} from './method_parameter_documen
 import {MethodReturnValueDocumentationDescriptor} from './method_return_value_documentation_descriptor.js';
 
 export function documentMethod(
-    description: string, parameters: MethodParameterDocumentationDescriptor[],
+    description: string, parameters?: MethodParameterDocumentationDescriptor[],
     returnValue?: MethodReturnValueDocumentationDescriptor): Function {
   return function(
       _target: any, propertyKey: string, descriptor: PropertyDescriptor) {

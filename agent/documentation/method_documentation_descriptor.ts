@@ -4,12 +4,12 @@ import {MethodReturnValueDocumentationDescriptor} from './method_return_value_do
 export class MethodDocumentationDescriptor {
   private readonly name: string;
   private readonly description: string;
-  private readonly parameters: MethodParameterDocumentationDescriptor[];
+  private readonly parameters?: MethodParameterDocumentationDescriptor[];
   private readonly returnValue?: MethodReturnValueDocumentationDescriptor;
 
   constructor(
       name: string, description: string,
-      parameters: MethodParameterDocumentationDescriptor[],
+      parameters?: MethodParameterDocumentationDescriptor[],
       returnValue?: MethodReturnValueDocumentationDescriptor) {
     this.name = name;
     this.description = description;
@@ -25,7 +25,7 @@ export class MethodDocumentationDescriptor {
     return this.description;
   }
 
-  getParameters(): MethodParameterDocumentationDescriptor[] {
+  getParameters(): MethodParameterDocumentationDescriptor[]|undefined {
     return this.parameters;
   }
 
