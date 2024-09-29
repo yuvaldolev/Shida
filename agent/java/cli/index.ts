@@ -14,6 +14,6 @@ export class JavaCli {
   constructor(consoleLogger: Logger, logcatLogger: Logger) {
     this.reflection = new ReflectionCli(consoleLogger);
     this.tracing = new TracingCli(consoleLogger, logcatLogger);
-    this.ui = new UiCli(logcatLogger);
+    this.ui = new UiCli(consoleLogger, logcatLogger);
   }
 }

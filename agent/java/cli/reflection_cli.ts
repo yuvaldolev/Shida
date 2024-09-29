@@ -1,12 +1,13 @@
 import {documentClass, documentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {Reflection} from '../reflection.js';
-import {JavaObject} from '../types/index.js';
+import {Stringifier} from '../stringifier.js';
 
 @documentClass(
     'Reflection', 'Perform Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
+  readonly #stringifier = new Stringifier();
   readonly #consoleLogger: Logger;
 
   constructor(consoleLogger: Logger) {
@@ -65,11 +66,11 @@ export class ReflectionCli {
         },
       ],
       {
-        'type': 'JavaObject[]',
+        'type': 'Java.Wrapper[]',
         description: 'The retrieved class instances',
       },
       )
-  getClassInstances(name: string): JavaObject[] {
+  getClassInstances(name: string): Java.Wrapper[] {
     return this.#reflection.getClassInstances(name);
   }
 
@@ -77,10 +78,10 @@ export class ReflectionCli {
       'Dumps an object field and its value to the console',
       [
         {
-          name: 'instance',
-          type: 'JavaObject',
+          name: 'o',
+          type: 'Java.Wrapper',
           optional: false,
-          description: 'Instance to dump',
+          description: 'Object to dump',
         },
         {
           name: 'name',
@@ -90,28 +91,28 @@ export class ReflectionCli {
         },
       ],
       )
-  dumpObjectField(instance: JavaObject, name: string): void {
+  dumpObjectField(o: Java.Wrapper, name: string): void {
     this.#consoleLogger.logField(
-        instance.getClass(), name,
-        this.#reflection.getObjectField(instance, name));
+        o.getClass().getSimpleName(), name,
+        this.#stringifier.stringify(o[name].value));
   }
 
   @documentMethod(
       'Dumps all object fields and their values to the console',
       [
         {
-          name: 'instance',
-          type: 'JavaObject',
+          name: 'o',
+          type: 'Java.Wrapper',
           optional: false,
-          description: 'Instance to dump',
+          description: 'Object to dump',
         },
       ],
       )
   dumpAllObjectFields(
-      instance: JavaObject,
+      o: Java.Wrapper,
       ): void {
-    for (const field of instance.getClass().getDeclaredFields()) {
-      this.dumpObjectField(instance, field.getName());
+    for (const field of o.getClass().getDeclaredFields()) {
+      this.dumpObjectField(o, field.getName());
     }
   }
 }

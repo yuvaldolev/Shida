@@ -1,13 +1,19 @@
 import {documentClass, documentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
+import {Stringifier} from '../stringifier.js';
+import {UiDumper} from '../ui_dumper.js';
 import {UiTracer} from '../ui_tracer.js';
 
 @documentClass('UI', 'Trace UI events')
 export class UiCli {
   readonly #uiTracer = new UiTracer();
+  readonly #uiDumper = new UiDumper();
+  readonly #stringifier = new Stringifier();
+  readonly #consoleLogger: Logger;
   readonly #logcatLogger: Logger;
 
-  constructor(logcatLogger: Logger) {
+  constructor(consoleLogger: Logger, logcatLogger: Logger) {
+    this.#consoleLogger = consoleLogger;
     this.#logcatLogger = logcatLogger;
   }
 
@@ -17,8 +23,9 @@ Log each click on a View`,
       )
   traceClicks(): void {
     this.#uiTracer.traceClicks(
-        (view, listener) => this.#logcatLogger.log(
-            `View clicked: view=${view}, listener=${listener}`),
+        (view, listener) => this.#logcatLogger.log(`View clicked: view=${
+            this.#stringifier.stringify(
+                view)}, listener=${this.#stringifier.stringify(listener)}`),
     );
   }
 
@@ -29,7 +36,8 @@ Log each touch on a View`,
   traceTouches(): void {
     this.#uiTracer.traceTouches(
         (view, event) => this.#logcatLogger.log(
-            `View touched: view=${view}, event=${event}`),
+            `View touched: view=${this.#stringifier.stringify(view)}, event=${
+                this.#stringifier.stringify(event)}`),
     );
   }
 
@@ -41,5 +49,9 @@ Log each touch on a View`,
   @documentMethod('Stop tracing UI touches')
   stopTracingTouches(): void {
     this.#uiTracer.stopTracingTouches();
+  }
+
+  dumpTopActivity(): void {
+    this.#consoleLogger.log(this.#uiDumper.dumpTopActivity());
   }
 }

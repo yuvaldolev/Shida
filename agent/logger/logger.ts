@@ -1,5 +1,3 @@
-import {JavaClass, JavaObject} from '../java/types/index.js';
-
 import {Sink} from './sink.js';
 
 export class Logger {
@@ -26,7 +24,7 @@ export class Logger {
     this.sink.write(message.toString());
   }
 
-  logColor(message: string, color: string) {
+  logColor(message: string, color: string): void {
     this.log(message.split('\n')
                  .map(
                      line => `${Logger.COLOR_PREFIX}${color}${
@@ -34,8 +32,8 @@ export class Logger {
                  .join('\n'));
   }
 
-  logField(clazz: JavaClass, name: string, value: JavaObject|null): void {
-    this.log(`${clazz.getSimpleName()}.${name} = ${value}`);
+  logField(clazz: string, name: string, value: string): void {
+    this.log(`${clazz}.${name} = ${value}`);
   }
 
   logFromThread(message: any, threadId: number): void {
