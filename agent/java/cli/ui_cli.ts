@@ -51,7 +51,9 @@ Log each touch on a View`,
     this.#uiTracer.stopTracingTouches();
   }
 
+  @documentMethod(
+      'Dump the top Activity, including its name, fragments and view tree')
   dumpTopActivity(): void {
-    this.#consoleLogger.log(this.#uiDumper.dumpTopActivity());
+    this.#consoleLogger.log(`\n${this.#uiDumper.dumpTopActivity()}\n`);
   }
 }

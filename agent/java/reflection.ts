@@ -4,7 +4,7 @@ export class Reflection {
   getClassInstances(name: string): Java.Wrapper[] {
     const instances: Java.Wrapper[] = [];
     Java.choose(name, {
-      onMatch: (instance) => {
+      onMatch: instance => {
         instances.push(instance);
       },
       onComplete: () => {},
