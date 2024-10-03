@@ -93,8 +93,10 @@ export class ReflectionCli {
       )
   dumpObjectField(o: Java.Wrapper, name: string): void {
     this.#consoleLogger.logField(
-        o.getClass().getSimpleName(), name,
-        this.#stringifier.stringify(o[name].value));
+        o.getClass().getSimpleName(),
+        name,
+        this.#stringifier.stringify(this.#reflection.getObjectField(o, name)),
+    );
   }
 
   @documentMethod(
@@ -106,13 +108,21 @@ export class ReflectionCli {
           optional: false,
           description: 'Object to dump',
         },
+        {
+          name: 'regex',
+          type: 'string',
+          optional: true,
+          description: 'Regex to filter the objects fields',
+        },
       ],
       )
-  dumpAllObjectFields(
-      o: Java.Wrapper,
-      ): void {
-    for (const field of o.getClass().getDeclaredFields()) {
-      this.dumpObjectField(o, field.getName());
-    }
+  dumpAllObjectFields(o: Java.Wrapper, regex?: string): void {
+    this.#reflection.forEachObjectField(
+        o,
+        (field, value) => this.#consoleLogger.logField(
+            o.getClass().getSimpleName(), field.getName(),
+            this.#stringifier.stringify(value)),
+        regex,
+    );
   }
 }

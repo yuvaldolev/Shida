@@ -26,11 +26,11 @@ export class UiDumper {
       dump = dump.concat(fragmentsDump);
     }
 
-    const viewsDump = this.dumpViewTree(activity);
-    if (0 !== viewsDump.length) {
+    const viewTreeDump = this.dumpViewTree(activity);
+    if (0 !== viewTreeDump.length) {
       dump.push('');
       dump.push('View Tree:');
-      dump = dump.concat(viewsDump);
+      dump = dump.concat(viewTreeDump);
     }
 
 
