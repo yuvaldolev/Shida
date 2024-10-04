@@ -1,22 +1,24 @@
+import {Type, TypeWrapper} from './types/index.js';
+
 export class Tracer {
-  private readonly logClass = Java.use('android.util.Log');
+  private readonly logClass: LogType = Java.use('android.util.Log');
   private readonly exceptionClass = Java.use('java.lang.Exception');
 
   traceMethod(
-      clazz: Java.Wrapper, method: Java.Wrapper, backtrace: boolean,
-      onStartTracing: (overload: Java.Wrapper) => void,
-      onErrorTracing: (overload: Java.Wrapper, error: any) => void,
+      clazz: TypeWrapper, method: Java.MethodDispatcher, backtrace: boolean,
+      onStartTracing: (overload: Java.Method) => void,
+      onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {
     method.overloads.forEach(
-        (overload: Java.Wrapper) => this.traceMethodOverload(
+        (overload: Java.Method) => this.traceMethodOverload(
             clazz, method, overload, backtrace, onStartTracing, onErrorTracing,
             onTrace));
   }
 
   private traceMethodOverload(
-      clazz: Java.Wrapper, method: Java.Wrapper, overload: Java.Wrapper,
-      backtrace: boolean, onStartTracing: (overload: Java.Wrapper) => void,
-      onErrorTracing: (overload: Java.Wrapper, error: any) => void,
+      clazz: TypeWrapper, method: Java.MethodDispatcher, overload: Java.Method,
+      backtrace: boolean, onStartTracing: (overload: Java.Method) => void,
+      onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {
     const tracer = this;
 
