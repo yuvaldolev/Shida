@@ -33,7 +33,7 @@ export class Reflection {
     }
   }
 
-  getClassInstances<T = any>(name: string): T[] {
+  getClassInstances<T = types.Object>(name: string): T[] {
     const instances: T[] = [];
     Java.choose(name, {
       onMatch: instance => {

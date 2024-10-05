@@ -1,15 +1,17 @@
+import {TypeCaster} from '../type_caster.js';
 import * as types from '../types/index.js';
 
-export class IteratorWrapper implements Iterator<Java.Wrapper> {
+export class IteratorWrapper<T extends types.Object> implements Iterator<T> {
+  private typeCaster: TypeCaster = new TypeCaster();
   private javaIterator: types.Iterator;
-  private clazz: Java.Wrapper;
+  private clazz: types.Type;
 
-  constructor(javaIterator: types.Iterator, clazz: Java.Wrapper) {
+  constructor(javaIterator: types.Iterator, clazz: types.Type) {
     this.javaIterator = javaIterator;
     this.clazz = clazz;
   }
 
-  next(): IteratorResult<Java.Wrapper> {
+  next(): IteratorResult<T> {
     if (!this.javaIterator.hasNext()) {
       return {
         done: true,
@@ -19,7 +21,7 @@ export class IteratorWrapper implements Iterator<Java.Wrapper> {
 
     return {
       done: false,
-      value: Java.cast(this.javaIterator.next(), this.clazz),
+      value: this.typeCaster.cast<T>(this.javaIterator.next(), this.clazz),
     };
   }
 }

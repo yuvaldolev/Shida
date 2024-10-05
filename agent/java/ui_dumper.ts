@@ -1,17 +1,28 @@
+import {ClassRetriever} from './class_retriever.js';
 import {IterableWrapper} from './iteration/index.js';
 import {Stringifier} from './stringifier.js';
+import * as types from './types/index.js';
 
 export class UiDumper {
-  private readonly activityThreadClass = Java.use('android.app.ActivityThread');
-  private readonly activityClientRecordClass =
-      Java.use('android.app.ActivityThread$ActivityClientRecord');
-  private readonly fragmentActivityClass =
-      Java.use('androidx.fragment.app.FragmentActivity');
-  private readonly androidFragmentClass = Java.use('android.app.Fragment');
-  private readonly androidXFragmentClass =
-      Java.use('androidx.fragment.app.Fragment');
-  private readonly viewGroupClass = Java.use('android.view.ViewGroup');
+  private readonly classRetriever = new ClassRetriever();
   private readonly stringifier = new Stringifier();
+  private readonly activityThreadClass: types.ActivityThreadType;
+  private readonly activityClientRecordClass: types.Type;
+  private readonly fragmentActivityClass: types.Type;
+  private readonly androidFragmentClass: types.Type;
+  private readonly androidXFragmentClass: types.Type;
+  private readonly viewGroupClass: types.Type;
+
+  constructor() {
+    this.activityThreadClass = Java.use('android.app.ActivityThread');
+    this.activityClientRecordClass =
+        Java.use('android.app.ActivityThread$ActivityClientRecord');
+    this.fragmentActivityClass =
+        Java.use('androidx.fragment.app.FragmentActivity');
+    this.androidFragmentClass = Java.use('android.app.Fragment');
+    this.androidXFragmentClass = Java.use('androidx.fragment.app.Fragment');
+    this.viewGroupClass = Java.use('android.view.ViewGroup');
+  }
 
   dumpTopActivity(): string {
     let dump: string[] = [];

@@ -70,11 +70,11 @@ export class ReflectionCli {
         },
       ],
       {
-        'type': 'Java.Wrapper[]',
+        'type': 'Object[]',
         description: 'The retrieved class instances',
       },
       )
-  getClassInstances(name: string): Java.Wrapper[] {
+  getClassInstances(name: string): types.Object[] {
     return this.#reflection.getClassInstances(name);
   }
 
