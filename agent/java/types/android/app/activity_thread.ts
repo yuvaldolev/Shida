@@ -1,10 +1,18 @@
+import {FridaJavaField} from '../../frida_java_field.js';
+import {FridaJavaType} from '../../frida_java_type.js';
 import * as java from '../../java/index.js';
-import {Type} from '../../type.js';
 
-export interface ActivityThreadType extends Type {
+import {Activity} from './activity.js';
+
+export interface ActivityThreadType extends FridaJavaType {
   currentActivityThread(): ActivityThread;
 }
 
 export interface ActivityThread extends java.Object {
-  mActivities;
+  mActivities: FridaJavaField<java.Map>;
+}
+
+export interface ActivityThread$ActivityClientRecord extends java.Object {
+  activity: FridaJavaField<Activity>;
+  paused: FridaJavaField<boolean>;
 }

@@ -4,9 +4,9 @@ import * as types from '../types/index.js';
 export class IteratorWrapper<T extends types.Object> implements Iterator<T> {
   private typeCaster: TypeCaster = new TypeCaster();
   private javaIterator: types.Iterator;
-  private clazz: types.Type;
+  private clazz: types.FridaJavaType;
 
-  constructor(javaIterator: types.Iterator, clazz: types.Type) {
+  constructor(javaIterator: types.Iterator, clazz: types.FridaJavaType) {
     this.javaIterator = javaIterator;
     this.clazz = clazz;
   }

@@ -1,27 +1,33 @@
 import {ClassRetriever} from './class_retriever.js';
 import {IterableWrapper} from './iteration/index.js';
 import {Stringifier} from './stringifier.js';
+import {TypeCaster} from './type_caster.js';
 import * as types from './types/index.js';
 
 export class UiDumper {
   private readonly classRetriever = new ClassRetriever();
   private readonly stringifier = new Stringifier();
+  private readonly typeCaster = new TypeCaster();
   private readonly activityThreadClass: types.ActivityThreadType;
-  private readonly activityClientRecordClass: types.Type;
-  private readonly fragmentActivityClass: types.Type;
-  private readonly androidFragmentClass: types.Type;
-  private readonly androidXFragmentClass: types.Type;
-  private readonly viewGroupClass: types.Type;
+  private readonly activityClientRecordClass: types.FridaJavaType;
+  private readonly fragmentActivityClass: types.FridaJavaType;
+  private readonly androidFragmentClass: types.FridaJavaType;
+  private readonly androidXFragmentClass: types.FridaJavaType;
+  private readonly viewGroupClass: types.FridaJavaType;
 
   constructor() {
-    this.activityThreadClass = Java.use('android.app.ActivityThread');
-    this.activityClientRecordClass =
-        Java.use('android.app.ActivityThread$ActivityClientRecord');
+    this.activityThreadClass =
+        this.classRetriever.retrieve('android.app.ActivityThread');
+    this.activityClientRecordClass = this.classRetriever.retrieve(
+        'android.app.ActivityThread$ActivityClientRecord');
     this.fragmentActivityClass =
-        Java.use('androidx.fragment.app.FragmentActivity');
-    this.androidFragmentClass = Java.use('android.app.Fragment');
-    this.androidXFragmentClass = Java.use('androidx.fragment.app.Fragment');
-    this.viewGroupClass = Java.use('android.view.ViewGroup');
+        this.classRetriever.retrieve('androidx.fragment.app.FragmentActivity');
+    this.androidFragmentClass =
+        this.classRetriever.retrieve('android.app.Fragment');
+    this.androidXFragmentClass =
+        this.classRetriever.retrieve('androidx.fragment.app.Fragment');
+    this.viewGroupClass =
+        this.classRetriever.retrieve('android.view.ViewGroup');
   }
 
   dumpTopActivity(): string {
@@ -48,13 +54,14 @@ export class UiDumper {
     return dump.join('\n');
   }
 
-  private getTopActivity(): Java.Wrapper {
+  private getTopActivity(): types.Activity {
     const currentActivityThread =
         this.activityThreadClass.currentActivityThread();
 
-    for (const record of IterableWrapper.from(
-             currentActivityThread.mActivities.value.values(),
-             this.activityClientRecordClass)) {
+    for (const record of
+             IterableWrapper.from<types.ActivityThread$ActivityClientRecord>(
+                 currentActivityThread.mActivities.value.values(),
+                 this.activityClientRecordClass)) {
       if (null === record) {
         continue;
       }
@@ -69,7 +76,7 @@ export class UiDumper {
     throw new Error('no top activity found');
   }
 
-  private dumpFragments(activity: Java.Wrapper): string[] {
+  private dumpFragments(activity: types.Activity): string[] {
     const dump: string[] = [];
 
     for (const fragment of this.getFragments(activity)) {
@@ -79,50 +86,46 @@ export class UiDumper {
     return dump;
   }
 
-  private dumpViewTree(activity: Java.Wrapper): string[] {
+  private dumpViewTree(activity: types.Activity): string[] {
     return this.dumpView(activity.getWindow().getDecorView());
   }
 
-  private getFragments(activity: Java.Wrapper): IterableWrapper {
+  private getFragments(activity: types.Activity):
+      IterableWrapper<types.Object> {
     if (this.fragmentActivityClass.class.isInstance(activity)) {
-      const fragmentActivity = Java.cast(
+      const fragmentActivity = this.typeCaster.cast<types.FragmentActivity>(
           activity,
           this.fragmentActivityClass,
       );
 
-      return this.getFragmentsFromManager(
-          fragmentActivity.getSupportFragmentManager(),
+      return IterableWrapper.from(
+          fragmentActivity.getSupportFragmentManager().getFragments(),
           this.androidXFragmentClass,
       );
     }
 
-    return this.getFragmentsFromManager(
-        activity.getFragmentManager(),
+    return IterableWrapper.from(
+        activity.getFragmentManager().getFragments(),
         this.androidFragmentClass,
     );
   }
 
-  private getFragmentsFromManager(
-      fragmentManager: Java.Wrapper,
-      fragmentClass: Java.Wrapper): IterableWrapper {
-    return IterableWrapper.from(fragmentManager.getFragments(), fragmentClass);
-  }
-
-  private dumpView(view: Java.Wrapper, indent: number = 1): string[] {
+  private dumpView(view: types.View, indent: number = 1): string[] {
     let dump: string[] = [];
 
     dump.push(`${' '.repeat(2 * indent)}${this.stringifier.stringify(view)}`);
 
     if (this.viewGroupClass.class.isInstance(view)) {
       dump = dump.concat(
-          this.dumpViewGroup(Java.cast(view, this.viewGroupClass), indent),
+          this.dumpViewGroup(
+              this.typeCaster.cast(view, this.viewGroupClass), indent),
       );
     }
 
     return dump;
   }
 
-  private dumpViewGroup(viewGroup: Java.Wrapper, indent: number): string[] {
+  private dumpViewGroup(viewGroup: types.ViewGroup, indent: number): string[] {
     let dump: string[] = [];
 
     for (let index = 0; index < viewGroup.getChildCount(); ++index) {

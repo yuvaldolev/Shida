@@ -7,4 +7,5 @@ export interface Class extends object.Object {
   getDeclaredMethods(): Method[];
   getSimpleName(): string;
   getSuperclass(): Class;
+  isInstance(obj: object.Object): boolean;
 }

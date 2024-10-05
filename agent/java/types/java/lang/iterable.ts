@@ -1,5 +1,7 @@
 import * as util from '../util/index.js';
 
-export interface Iterable {
+import * as object from './object.js';
+
+export interface Iterable extends object.Object {
   iterator(): util.Iterator;
 }

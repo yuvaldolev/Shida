@@ -4,10 +4,10 @@ import {IteratorWrapper} from './iterator_wrapper.js';
 
 export class IterableWrapper<T extends types.Object> implements Iterable<T> {
   private javaIterable: types.Iterable;
-  private clazz: types.Type;
+  private clazz: types.FridaJavaType;
 
   static from<T extends types.Object>(
-      javaIterable: types.Iterable, clazz: types.Type): IterableWrapper<T> {
+      javaIterable: types.Iterable, clazz: types.FridaJavaType): IterableWrapper<T> {
     return new IterableWrapper<T>(javaIterable, clazz);
   }
 
@@ -21,7 +21,7 @@ export class IterableWrapper<T extends types.Object> implements Iterable<T> {
     }
   }
 
-  private constructor(javaIterable: types.Iterable, clazz: types.Type) {
+  private constructor(javaIterable: types.Iterable, clazz: types.FridaJavaType) {
     this.javaIterable = javaIterable;
     this.clazz = clazz;
   }

@@ -46,7 +46,7 @@ export class Reflection {
   }
 
   forEachClassMethod(
-      clazz: types.TypeWrapper,
+      clazz: types.FridaJavaTypeWrapper,
       callback:
           (method: Java.MethodDispatcher,
            reflectedMethod: types.Method) => void,

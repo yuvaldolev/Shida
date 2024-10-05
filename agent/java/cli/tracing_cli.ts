@@ -49,7 +49,7 @@ Log each method invocation with the arguments and return value`,
       )
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
-    const clazz = this.#classRetriever.retrieve<types.TypeWrapper>(className);
+    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -143,7 +143,7 @@ Log each method invocation with the arguments and return value`,
       ],
       )
   stopTracingMethod(className: string, methodName: string): void {
-    const clazz = this.#classRetriever.retrieve<types.TypeWrapper>(className);
+    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {

@@ -4,7 +4,7 @@ import * as types from './types/index.js';
 export class Tracer {
   private readonly classRetriever = new ClassRetriever();
   private readonly logClass: types.LogType;
-  private readonly exceptionClass: types.Type;
+  private readonly exceptionClass: types.FridaJavaType;
 
   constructor() {
     this.logClass = this.classRetriever.retrieve('android.util.Log');
@@ -12,7 +12,7 @@ export class Tracer {
   }
 
   traceMethod(
-      clazz: types.Type, method: Java.MethodDispatcher, backtrace: boolean,
+      clazz: types.FridaJavaType, method: Java.MethodDispatcher, backtrace: boolean,
       onStartTracing: (overload: Java.Method) => void,
       onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {
@@ -23,7 +23,7 @@ export class Tracer {
   }
 
   private traceMethodOverload(
-      clazz: types.Type, method: Java.MethodDispatcher, overload: Java.Method,
+      clazz: types.FridaJavaType, method: Java.MethodDispatcher, overload: Java.Method,
       backtrace: boolean, onStartTracing: (overload: Java.Method) => void,
       onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {
