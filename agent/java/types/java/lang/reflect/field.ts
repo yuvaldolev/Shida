@@ -1,8 +1,8 @@
-import {JavaObject} from '../index.js';
+import * as object from '../object.js';
 
 import {AccessibleObject} from './accessible_object.js';
 
 export interface Field extends AccessibleObject {
-  get(obj: JavaObject): JavaObject;
+  get(obj: object.Object): object.Object;
   getName(): string;
 }

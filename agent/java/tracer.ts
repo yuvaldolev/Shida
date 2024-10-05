@@ -1,11 +1,18 @@
-import {Type, TypeWrapper} from './types/index.js';
+import {ClassRetriever} from './class_retriever.js';
+import * as types from './types/index.js';
 
 export class Tracer {
-  private readonly logClass: LogType = Java.use('android.util.Log');
-  private readonly exceptionClass = Java.use('java.lang.Exception');
+  private readonly classRetriever = new ClassRetriever();
+  private readonly logClass: types.LogType;
+  private readonly exceptionClass: types.Type;
+
+  constructor() {
+    this.logClass = this.classRetriever.retrieve('android.util.Log');
+    this.exceptionClass = this.classRetriever.retrieve('java.lang.Exception')
+  }
 
   traceMethod(
-      clazz: TypeWrapper, method: Java.MethodDispatcher, backtrace: boolean,
+      clazz: types.Type, method: Java.MethodDispatcher, backtrace: boolean,
       onStartTracing: (overload: Java.Method) => void,
       onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {
@@ -16,7 +23,7 @@ export class Tracer {
   }
 
   private traceMethodOverload(
-      clazz: TypeWrapper, method: Java.MethodDispatcher, overload: Java.Method,
+      clazz: types.Type, method: Java.MethodDispatcher, overload: Java.Method,
       backtrace: boolean, onStartTracing: (overload: Java.Method) => void,
       onErrorTracing: (overload: Java.Method, error: any) => void,
       onTrace: (trace: string) => void): void {

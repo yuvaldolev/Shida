@@ -1,6 +1,6 @@
-import {JavaObject} from '../java_object';
+import * as object from '../object.js';
 
-export interface AccessibleObject extends JavaObject {
+export interface AccessibleObject extends object.Object {
   isAccessible(): boolean;
   setAccessible(flag: boolean): void;
 }

@@ -1,9 +1,11 @@
 import {documentClass, documentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
+import {ClassRetriever} from '../class_retriever.js';
 import {Hooker} from '../hooker.js';
 import {JavaProcess} from '../java_process.js';
 import {Reflection} from '../reflection.js';
 import {Tracer} from '../tracer.js';
+import * as types from '../types/index.js';
 
 @documentClass('Tracing', 'Trace Java class methods')
 export class TracingCli {
@@ -11,6 +13,7 @@ export class TracingCli {
   readonly #reflection = new Reflection();
   readonly #hooker = new Hooker();
   readonly #process = new JavaProcess();
+  readonly #classRetriever = new ClassRetriever();
   readonly #consoleLogger: Logger;
   readonly #logcatLogger: Logger;
 
@@ -46,7 +49,7 @@ Log each method invocation with the arguments and return value`,
       )
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
-    const clazz = Java.use(className);
+    const clazz = this.#classRetriever.retrieve<types.TypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -117,7 +120,7 @@ Log each method invocation with the arguments and return value`,
   traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
       void {
     this.#reflection.forEachClassMethod(
-        Java.use(name),
+        this.#classRetriever.retrieve(name),
         (_, method) => this.traceMethod(name, method.getName(), backtrace),
         regex);
   }
@@ -140,7 +143,7 @@ Log each method invocation with the arguments and return value`,
       ],
       )
   stopTracingMethod(className: string, methodName: string): void {
-    const clazz = Java.use(className);
+    const clazz = this.#classRetriever.retrieve<types.TypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -175,7 +178,7 @@ Log each method invocation with the arguments and return value`,
       )
   stopTracingClassMethods(name: string, regex?: string) {
     this.#reflection.forEachClassMethod(
-        Java.use(name),
+        this.#classRetriever.retrieve(name),
         (_, method) => this.stopTracingMethod(name, method.getName()),
         regex,
     );

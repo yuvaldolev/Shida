@@ -1,9 +1,7 @@
-import {TypeWrapper} from './types/index';
-import {JavaObject} from './types/java/lang/index';
-import {Field, Method} from './types/java/lang/reflect/index';
+import * as types from './types/index.js';
 
 export class Reflection {
-  getObjectField(object: JavaObject, fieldName: string): JavaObject|null {
+  getObjectField(object: types.Object, fieldName: string): types.Object|null {
     let clazz = object.getClass();
     while (clazz != null) {
       try {
@@ -17,7 +15,7 @@ export class Reflection {
   }
 
   forEachObjectField(
-      object: JavaObject, callback: (field: Field, value: any) => void,
+      object: types.Object, callback: (field: types.Field, value: any) => void,
       regex?: string): void {
     let clazz = object.getClass();
 
@@ -48,9 +46,10 @@ export class Reflection {
   }
 
   forEachClassMethod(
-      clazz: TypeWrapper,
+      clazz: types.TypeWrapper,
       callback:
-          (method: Java.MethodDispatcher, reflectedMethod: Method) => void,
+          (method: Java.MethodDispatcher,
+           reflectedMethod: types.Method) => void,
       regex?: string): void {
     for (const reflectedMethod of clazz.class.getDeclaredMethods()) {
       if ((typeof regex !== 'undefined') &&
@@ -67,8 +66,8 @@ export class Reflection {
     }
   }
 
-  private getObjectFieldValue(object: JavaObject, field: Field): JavaObject
-      |null {
+  private getObjectFieldValue(object: types.Object, field: types.Field):
+      types.Object|null {
     const accessible = field.isAccessible();
 
     try {

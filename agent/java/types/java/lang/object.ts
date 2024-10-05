@@ -1,5 +1,5 @@
 import {Class} from './class.js';
 
-export interface JavaObject {
+export interface Object {
   getClass(): Class;
 }

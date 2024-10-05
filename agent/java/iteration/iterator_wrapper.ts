@@ -1,10 +1,10 @@
-import {JavaIterator} from '../types/index.js';
+import * as types from '../types/index.js';
 
 export class IteratorWrapper implements Iterator<Java.Wrapper> {
-  private javaIterator: JavaIterator;
+  private javaIterator: types.Iterator;
   private clazz: Java.Wrapper;
 
-  constructor(javaIterator: JavaIterator, clazz: Java.Wrapper) {
+  constructor(javaIterator: types.Iterator, clazz: Java.Wrapper) {
     this.javaIterator = javaIterator;
     this.clazz = clazz;
   }

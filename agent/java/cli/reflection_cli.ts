@@ -3,8 +3,7 @@ import {Logger} from '../../logger/index.js';
 import {ClassRetriever} from '../class_retriever.js';
 import {Reflection} from '../reflection.js';
 import {Stringifier} from '../stringifier.js';
-import {TypeWrapper} from '../types/index.js';
-import {JavaObject} from '../types/java/lang/index.js';
+import * as types from '../types/index.js';
 
 @documentClass(
     'Reflection', 'Perform Reflection-based operations on Java types')
@@ -84,7 +83,7 @@ export class ReflectionCli {
       [
         {
           name: 'object',
-          type: 'Java.Wrapper',
+          type: 'Object',
           optional: false,
           description: 'Object to dump',
         },
@@ -96,7 +95,7 @@ export class ReflectionCli {
         },
       ],
       )
-  dumpObjectField(object: JavaObject, name: string): void {
+  dumpObjectField(object: types.Object, name: string): void {
     this.#consoleLogger.logField(
         object.getClass().getSimpleName(),
         name,
@@ -110,7 +109,7 @@ export class ReflectionCli {
       [
         {
           name: 'object',
-          type: 'Java.Wrapper',
+          type: 'Object',
           optional: false,
           description: 'Object to dump',
         },
@@ -122,7 +121,7 @@ export class ReflectionCli {
         },
       ],
       )
-  dumpAllObjectFields(object: JavaObject, regex?: string): void {
+  dumpAllObjectFields(object: types.Object, regex?: string): void {
     this.#reflection.forEachObjectField(
         object,
         (field, value) => this.#consoleLogger.logField(

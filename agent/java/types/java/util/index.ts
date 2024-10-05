@@ -1,1 +1,1 @@
-export {JavaIterator} from './java_iterator.js';
+export {Iterator} from './iterator.js';

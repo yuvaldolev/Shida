@@ -1,15 +1,15 @@
 export class Hooker {
   unhookMethod(
-      method: Java.Wrapper, onUnhook?: (overload: Java.Wrapper) => void,
-      onError?: (overload: Java.Wrapper, error: any) => void): void {
+      method: Java.MethodDispatcher, onUnhook?: (overload: Java.Method) => void,
+      onError?: (overload: Java.Method, error: any) => void): void {
     method.overloads.forEach(
-        (overload: Java.Wrapper) =>
+        (overload: Java.Method) =>
             Hooker.unhookMethodOverload(overload, onUnhook, onError));
   }
 
   private static unhookMethodOverload(
-      overload: Java.Wrapper, onUnhook?: (overload: Java.Wrapper) => void,
-      onError?: (overload: Java.Wrapper, error: any) => void): void {
+      overload: Java.Method, onUnhook?: (overload: Java.Method) => void,
+      onError?: (overload: Java.Method, error: any) => void): void {
     try {
       overload.implementation = null;
 
