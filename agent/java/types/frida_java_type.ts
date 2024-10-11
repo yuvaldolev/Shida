@@ -12,3 +12,7 @@ export interface FridaJavaType {
 
   $dispose(): void;
 }
+
+export interface FridaJavaTypeWrapper extends FridaJavaType {
+  [name: string]: any;
+}

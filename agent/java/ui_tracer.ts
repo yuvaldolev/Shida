@@ -1,15 +1,23 @@
+import {ClassRetriever} from './class_retriever.js';
 import {Hooker} from './hooker.js';
+import * as types from './types/index.js';
 
 export class UiTracer {
-  private readonly viewClass = Java.use('android.view.View');
+  private readonly classRetriever = new ClassRetriever();
   private readonly hooker = new Hooker();
+  private readonly viewClass: types.ViewType;
 
-  traceClicks(
-      onClick: (view: Java.Wrapper, listener: Java.Wrapper|null) => void):
+  constructor() {
+    this.viewClass = this.classRetriever.retrieve('android.view.View');
+  }
+
+  traceClicks(onClick: (view: types.View, listener: Java.Wrapper|null) => void):
       void {
     const performClickMethod = this.viewClass.performClick;
     performClickMethod.implementation = function() {
       const returnValue = performClickMethod.call(this);
+
+      // const view = this as types.View;
 
       let listener: Java.Wrapper|null = null;
       const listenerInfo = this.mListenerInfo.value;
@@ -17,7 +25,7 @@ export class UiTracer {
         listener = listenerInfo.mOnClickListener.value;
       }
 
-      onClick(this, listener);
+      onClick(view, listener);
 
       return returnValue;
     };
