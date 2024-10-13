@@ -31,7 +31,8 @@ export class ReflectionCli {
   listClassConstructors(name: string): void {
     const clazz = this.#classRetriever.retrieve(name);
     clazz.$init.overloads.forEach(
-        (overload: Java.Method) => this.#consoleLogger.log(overload));
+        (overload: types.FridaJavaMethodOverload) =>
+            this.#consoleLogger.log(overload));
   }
 
   @documentMethod(
@@ -55,7 +56,8 @@ export class ReflectionCli {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name), (method, _) => {
           method.overloads.forEach(
-              (overload: Java.Method) => this.#consoleLogger.log(overload));
+              (overload: types.FridaJavaMethodOverload) =>
+                  this.#consoleLogger.log(overload));
         }, regex);
   }
 

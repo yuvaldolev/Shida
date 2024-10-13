@@ -48,7 +48,7 @@ export class Reflection {
   forEachClassMethod(
       clazz: types.FridaJavaTypeWrapper,
       callback:
-          (method: Java.MethodDispatcher,
+          (method: types.FridaJavaOverloadedMethod,
            reflectedMethod: types.Method) => void,
       regex?: string): void {
     for (const reflectedMethod of clazz.class.getDeclaredMethods()) {

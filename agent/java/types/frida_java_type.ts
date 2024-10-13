@@ -1,14 +1,15 @@
-import {Class} from './java/lang/index.js';
+import {FridaJavaMethod} from './frida_java_method.js';
+import * as java from './java/index.js';
 
 export interface FridaJavaType {
-  $alloc: Java.MethodDispatcher;
+  $alloc: FridaJavaMethod<[], java.Object>;
   $className: string;
-  $init: Java.MethodDispatcher;
-  $new: Java.MethodDispatcher;
+  $init: FridaJavaMethod<any[], void, java.Object>;
+  $new: FridaJavaMethod<any[], java.Object>;
   $ownMembers: string[];
   $super: FridaJavaType;
 
-  class: Class;
+  class: java.Class;
 
   $dispose(): void;
 }

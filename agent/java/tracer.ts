@@ -12,21 +12,26 @@ export class Tracer {
   }
 
   traceMethod(
-      clazz: types.FridaJavaType, method: Java.MethodDispatcher,
-      backtrace: boolean, onStartTracing: (overload: Java.Method) => void,
-      onErrorTracing: (overload: Java.Method, error: any) => void,
+      clazz: types.FridaJavaType,
+      method: types.FridaJavaMethod<any[], any, types.Object>,
+      backtrace: boolean,
+      onStartTracing: (overload: types.FridaJavaMethodOverload) => void,
+      onErrorTracing:
+          (overload: types.FridaJavaMethodOverload, error: any) => void,
       onTrace: (trace: string) => void): void {
     method.overloads.forEach(
-        (overload: Java.Method) => this.traceMethodOverload(
+        (overload: types.FridaJavaMethodOverload) => this.traceMethodOverload(
             clazz, method, overload, backtrace, onStartTracing, onErrorTracing,
             onTrace));
   }
 
   private traceMethodOverload(
-      clazz: types.FridaJavaType, method: Java.MethodDispatcher,
-      overload: Java.Method, backtrace: boolean,
-      onStartTracing: (overload: Java.Method) => void,
-      onErrorTracing: (overload: Java.Method, error: any) => void,
+      clazz: types.FridaJavaType,
+      method: types.FridaJavaMethod<any[], any, types.Object>,
+      overload: types.FridaJavaMethodOverload, backtrace: boolean,
+      onStartTracing: (overload: types.FridaJavaMethodOverload) => void,
+      onErrorTracing:
+          (overload: types.FridaJavaMethodOverload, error: any) => void,
       onTrace: (trace: string) => void): void {
     const tracer = this;
 
