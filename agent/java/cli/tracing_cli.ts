@@ -9,6 +9,12 @@ import * as types from '../types/index.js';
 
 @documentClass('Tracing', 'Trace Java class methods')
 export class TracingCli {
+  readonly LOG_PRIORITY_VERBOSE = 2;
+  readonly LOG_PRIORITY_DEBUG = 3;
+  readonly LOG_PRIORITY_INFO = 4;
+  readonly LOG_PRIORITY_WARN = 5;
+  readonly LOG_PRIORITY_ERROR = 6;
+
   readonly #tracer = new Tracer();
   readonly #reflection = new Reflection();
   readonly #hooker = new Hooker();
@@ -49,7 +55,8 @@ Log each method invocation with the arguments and return value`,
       )
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
-    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
+    const clazz =
+        this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -143,7 +150,8 @@ Log each method invocation with the arguments and return value`,
       ],
       )
   stopTracingMethod(className: string, methodName: string): void {
-    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
+    const clazz =
+        this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -181,6 +189,19 @@ Log each method invocation with the arguments and return value`,
         this.#classRetriever.retrieve(name),
         (_, method) => this.stopTracingMethod(name, method.getName()),
         regex,
+    );
+  }
+
+  traceLog(
+      message_regex: string, minimum_log_level?: number,
+      maximum_log_level?: number, tag_regex?: string) {
+    this.#tracer.traceLog(
+        trace => this.#logcatLogger.logFromThread(
+            trace, this.#process.getCurrentThreadId()),
+        message_regex,
+        minimum_log_level,
+        maximum_log_level,
+        tag_regex,
     );
   }
 }

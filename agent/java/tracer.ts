@@ -25,6 +25,25 @@ export class Tracer {
             onTrace));
   }
 
+  traceLog(
+      onTrace: (trace: string) => void,
+      message_regex: string,
+      minimum_log_level?: number,
+      maximum_log_level?: number,
+      tag_regex?: string,
+  ) {
+    const logClass = this.logClass;
+    const println_native = this.logClass.println_native;
+    println_native.implementation = function(
+        bufID: number, priority: number, tag: string, msg: string) {
+      onTrace(tag);
+      const returnValue =
+          println_native.call(logClass, bufID, priority, tag, msg);
+      onTrace(msg);
+      return returnValue;
+    }
+  }
+
   private traceMethodOverload(
       clazz: types.FridaJavaType,
       method: types.FridaJavaMethod<any[], any, types.Object>,

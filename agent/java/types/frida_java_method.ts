@@ -6,7 +6,7 @@ export type MethodImplementation<
 
 export interface FridaJavaMethodOverload<
     Arguments extends any[] = any[], ReturnType = any,
-                      This extends java.Object | null = java.Object> {
+                      This extends java.Object | null = null> {
   methodName: string;
   returnType: Java.Type;
   argumentTypes: Java.Type[];
@@ -20,7 +20,8 @@ export interface FridaJavaOverloadedMethod {
   methodName: string;
   overloads: FridaJavaMethodOverload[];
 
-  overload<Arguments extends any[], ReturnType, This extends java.Object|null>(
+  overload<Arguments extends any[], ReturnType,
+                             This extends java.Object|null = null>(
       ...args: string[]): FridaJavaMethodOverload<Arguments, ReturnType, This>;
 }
 
