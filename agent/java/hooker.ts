@@ -1,15 +1,25 @@
+import * as types from './types/index.js';
+
 export class Hooker {
   unhookMethod(
-      method: Java.MethodDispatcher, onUnhook?: (overload: Java.Method) => void,
-      onError?: (overload: Java.Method, error: any) => void): void {
+      method: types.FridaJavaOverloadedMethod,
+      onUnhook?:
+          (overload: types.FridaJavaMethod<any[], any, types.Object>) => void,
+      onError?:
+          (overload: types.FridaJavaMethod<any[], any, types.Object>,
+           error: any) => void): void {
     method.overloads.forEach(
-        (overload: Java.Method) =>
+        (overload: types.FridaJavaMethod<any[], any, types.Object>) =>
             Hooker.unhookMethodOverload(overload, onUnhook, onError));
   }
 
   private static unhookMethodOverload(
-      overload: Java.Method, onUnhook?: (overload: Java.Method) => void,
-      onError?: (overload: Java.Method, error: any) => void): void {
+      overload: types.FridaJavaMethod<any[], any, types.Object>,
+      onUnhook?:
+          (overload: types.FridaJavaMethod<any[], any, types.Object>) => void,
+      onError?:
+          (overload: types.FridaJavaMethod<any[], any, types.Object>,
+           error: any) => void): void {
     try {
       overload.implementation = null;
 

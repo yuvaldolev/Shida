@@ -1,7 +1,7 @@
 import * as android from './android/index.js';
 import * as androidx from './androidx/index.js';
 
-export {Activity, ActivityThread, ActivityThread$ActivityClientRecord, ActivityThreadType, LogType, View, ViewGroup, ViewType, Window} from './android/index.js';
+export {Activity, ActivityThread, ActivityThread$ActivityClientRecord, ActivityThreadType, LogType, View, View$ListenerInfo, ViewGroup, ViewType, Window} from './android/index.js';
 export {FragmentActivity} from './androidx/index.js';
 export {FridaJavaField} from './frida_java_field.js';
 export {FridaJavaMethod, FridaJavaOverloadedMethod} from './frida_java_method.js';
