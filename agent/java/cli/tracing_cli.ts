@@ -1,21 +1,22 @@
-import {documentClass, documentMethod} from '../../documentation/index.js';
+import {DocumentClass, DocumentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {ClassRetriever} from '../class_retriever.js';
 import {Hooker} from '../hooker.js';
 import {JavaProcess} from '../java_process.js';
 import {Reflection} from '../reflection.js';
-import {Tracer} from '../tracer.js';
+import {LogFilter, LogTracer, Tracer} from '../tracing/index.js';
 import * as types from '../types/index.js';
 
-@documentClass('Tracing', 'Trace Java class methods')
+@DocumentClass('Tracing', 'Trace Java class methods')
 export class TracingCli {
-  readonly LOG_PRIORITY_VERBOSE = 2;
-  readonly LOG_PRIORITY_DEBUG = 3;
-  readonly LOG_PRIORITY_INFO = 4;
-  readonly LOG_PRIORITY_WARN = 5;
-  readonly LOG_PRIORITY_ERROR = 6;
+  readonly LOG_PRIORITY_VERBOSE = LogTracer.LOG_PRIORITY_VERBOSE;
+  readonly LOG_PRIORITY_DEBUG = LogTracer.LOG_PRIORITY_DEBUG;
+  readonly LOG_PRIORITY_INFO = LogTracer.LOG_PRIORITY_INFO;
+  readonly LOG_PRIORITY_WARN = LogTracer.LOG_PRIORITY_WARN;
+  readonly LOG_PRIORITY_ERROR = LogTracer.LOG_PRIORITY_ERROR;
 
   readonly #tracer = new Tracer();
+  readonly #logTracer = new LogTracer();
   readonly #reflection = new Reflection();
   readonly #hooker = new Hooker();
   readonly #process = new JavaProcess();
@@ -28,7 +29,7 @@ export class TracingCli {
     this.#logcatLogger = logcatLogger;
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace a class method.
 Log each method invocation with the arguments and return value`,
       [
@@ -75,7 +76,7 @@ Log each method invocation with the arguments and return value`,
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace all class constructors.
 Log each constructor invocation with the arguments and return value`,
       [
@@ -98,7 +99,7 @@ Log each constructor invocation with the arguments and return value`,
     this.traceMethod(name, '$init', backtrace);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace all class methods.
 Log each method invocation with the arguments and return value`,
       [
@@ -132,7 +133,7 @@ Log each method invocation with the arguments and return value`,
         regex);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Stop tracing a class method',
       [
         {
@@ -166,7 +167,7 @@ Log each method invocation with the arguments and return value`,
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Stop tracing all class methods',
       [
         {
@@ -193,15 +194,20 @@ Log each method invocation with the arguments and return value`,
   }
 
   traceLog(
-      message_regex: string, minimum_log_level?: number,
-      maximum_log_level?: number, tag_regex?: string) {
-    this.#tracer.traceLog(
-        trace => this.#logcatLogger.logFromThread(
-            trace, this.#process.getCurrentThreadId()),
-        message_regex,
-        minimum_log_level,
-        maximum_log_level,
-        tag_regex,
+      messageRegex: string,
+      minimumLogLevel?: number,
+      maximumLogLevel?: number,
+      tagRegex?: string,
+  ) {
+    this.#logTracer.trace(
+        new LogFilter(
+            trace => this.#logcatLogger.logFromThread(
+                trace, this.#process.getCurrentThreadId()),
+            messageRegex,
+            minimumLogLevel,
+            maximumLogLevel,
+            tagRegex,
+            ),
     );
   }
 }

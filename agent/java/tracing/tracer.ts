@@ -1,14 +1,15 @@
-import {ClassRetriever} from './class_retriever.js';
-import * as types from './types/index.js';
+import {ClassRetriever} from '../class_retriever.js';
+import * as types from '../types/index.js';
 
 export class Tracer {
-  private readonly classRetriever = new ClassRetriever();
   private readonly logClass: types.LogType;
   private readonly exceptionClass: types.FridaJavaType;
 
   constructor() {
-    this.logClass = this.classRetriever.retrieve('android.util.Log');
-    this.exceptionClass = this.classRetriever.retrieve('java.lang.Exception')
+    const classRetriever = new ClassRetriever();
+
+    this.logClass = classRetriever.retrieve('android.util.Log');
+    this.exceptionClass = classRetriever.retrieve('java.lang.Exception');
   }
 
   traceMethod(
@@ -23,25 +24,6 @@ export class Tracer {
         (overload: types.FridaJavaMethodOverload) => this.traceMethodOverload(
             clazz, method, overload, backtrace, onStartTracing, onErrorTracing,
             onTrace));
-  }
-
-  traceLog(
-      onTrace: (trace: string) => void,
-      message_regex: string,
-      minimum_log_level?: number,
-      maximum_log_level?: number,
-      tag_regex?: string,
-  ) {
-    const logClass = this.logClass;
-    const println_native = this.logClass.println_native;
-    println_native.implementation = function(
-        bufID: number, priority: number, tag: string, msg: string) {
-      onTrace(tag);
-      const returnValue =
-          println_native.call(logClass, bufID, priority, tag, msg);
-      onTrace(msg);
-      return returnValue;
-    }
   }
 
   private traceMethodOverload(

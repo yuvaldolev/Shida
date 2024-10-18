@@ -1,10 +1,9 @@
-import {documentClass, documentMethod} from '../../documentation/index.js';
+import {DocumentClass, DocumentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {Stringifier} from '../stringifier.js';
-import {UiDumper} from '../ui_dumper.js';
-import {UiTracer} from '../ui_tracer.js';
+import {UiDumper, UiTracer} from '../ui/index.js';
 
-@documentClass('UI', 'Trace UI events')
+@DocumentClass('UI', 'Trace UI events')
 export class UiCli {
   readonly #uiTracer = new UiTracer();
   readonly #uiDumper = new UiDumper();
@@ -17,7 +16,7 @@ export class UiCli {
     this.#logcatLogger = logcatLogger;
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace UI clicks.
 Log each click on a View`,
       )
@@ -29,7 +28,7 @@ Log each click on a View`,
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace UI touches.
 Log each touch on a View`,
       )
@@ -41,17 +40,17 @@ Log each touch on a View`,
     );
   }
 
-  @documentMethod('Stop tracing UI clicks')
+  @DocumentMethod('Stop tracing UI clicks')
   stopTracingClicks(): void {
     this.#uiTracer.stopTracingClicks();
   }
 
-  @documentMethod('Stop tracing UI touches')
+  @DocumentMethod('Stop tracing UI touches')
   stopTracingTouches(): void {
     this.#uiTracer.stopTracingTouches();
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Dump the top Activity, including its name, fragments and view tree')
   dumpTopActivity(): void {
     this.#consoleLogger.log(`\n${this.#uiDumper.dumpTopActivity()}\n`);

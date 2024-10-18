@@ -11,7 +11,7 @@ export interface View extends java.Object {
   mListenerInfo: FridaJavaField<View$ListenerInfo>;
 }
 
-export interface ViewType extends FridaJavaType {
+export interface ViewType extends FridaJavaType<View> {
   performClick: FridaJavaMethod<[], boolean, View>;
   onTouchEvent: FridaJavaMethod<[java.Object], boolean, View>;
 }

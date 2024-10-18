@@ -1,14 +1,16 @@
-import {ClassRetriever} from './class_retriever.js';
-import {Hooker} from './hooker.js';
-import * as types from './types/index.js';
+import {ClassRetriever} from '../class_retriever.js';
+import {Hooker} from '../hooker.js';
+import * as types from '../types/index.js';
 
 export class UiTracer {
-  private readonly classRetriever = new ClassRetriever();
   private readonly hooker = new Hooker();
   private readonly viewClass: types.ViewType;
 
   constructor() {
-    this.viewClass = this.classRetriever.retrieve('android.view.View');
+    const classRetriever = new ClassRetriever();
+
+    this.viewClass =
+        classRetriever.retrieve<types.ViewType>('android.view.View');
   }
 
   traceClicks(onClick: (view: types.View, listener: types.Object|null) => void):

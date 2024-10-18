@@ -60,11 +60,10 @@ export class ClassDocumentationGenerator {
     const prototype = Object.getPrototypeOf(attribute);
 
     // @ts-ignore
-    if (global._shida_documentation.classes.has(prototype)) {
+    if (global._shidaDocumentation.classes.has(prototype)) {
       documentation = `${documentation}\n  ${
           // @ts-ignore
-          global._shida_documentation.classes.get(prototype)
-              .getDescription()}.`;
+          global._shidaDocumentation.classes.get(prototype).getDescription()}.`;
     }
 
     documentation = `${documentation}\n`;
@@ -79,9 +78,9 @@ export class ClassDocumentationGenerator {
     const method = prototype[methodName];
 
     // @ts-ignore
-    if (global._shida_documentation.methods.has(method)) {
+    if (global._shidaDocumentation.methods.has(method)) {
       // @ts-ignore
-      const description = global._shida_documentation.methods.get(method)
+      const description = global._shidaDocumentation.methods.get(method)
                               .getDescription()
                               .split('\n')
                               .map((line: string) => `  ${line}`)

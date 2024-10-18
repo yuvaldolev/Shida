@@ -1,11 +1,11 @@
-import {documentClass, documentMethod} from '../../documentation/index.js';
+import {DocumentClass, DocumentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {ClassRetriever} from '../class_retriever.js';
 import {Reflection} from '../reflection.js';
 import {Stringifier} from '../stringifier.js';
 import * as types from '../types/index.js';
 
-@documentClass(
+@DocumentClass(
     'Reflection', 'Perform Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
@@ -17,7 +17,7 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Lists class constructors',
       [
         {
@@ -29,13 +29,13 @@ export class ReflectionCli {
       ],
       )
   listClassConstructors(name: string): void {
-    const clazz = this.#classRetriever.retrieve(name);
-    clazz.$init.overloads.forEach(
-        (overload: types.FridaJavaMethodOverload) =>
-            this.#consoleLogger.log(overload));
+    // const clazz = this.#classRetriever.retrieve(name);
+    // clazz.$init.overloads.forEach(
+    //     (overload: types.FridaJavaMethodOverload) =>
+    //         this.#consoleLogger.log(overload));
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Lists class methods',
       [
         {
@@ -61,7 +61,7 @@ export class ReflectionCli {
         }, regex);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Retieves all class instances from the JVM',
       [
         {
@@ -80,7 +80,7 @@ export class ReflectionCli {
     return this.#reflection.getClassInstances(name);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Dumps an object field and its value to the console',
       [
         {
@@ -106,7 +106,7 @@ export class ReflectionCli {
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Dumps all object fields and their values to the console',
       [
         {
