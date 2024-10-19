@@ -1,19 +1,19 @@
 export class LogFilter {
   private readonly messageRegex: RegExp;
+  private readonly tagRegex?: RegExp;
   private readonly minimumPriority?: number;
   private readonly maximumPriority?: number;
-  private readonly tagRegex?: RegExp;
 
   constructor(
       messageRegex: RegExp,
+      tagRegex?: RegExp,
       minimumPriority?: number,
       maximumPriority?: number,
-      tagRegex?: RegExp,
   ) {
     this.messageRegex = messageRegex;
+    this.tagRegex = tagRegex;
     this.minimumPriority = minimumPriority;
     this.maximumPriority = maximumPriority;
-    this.tagRegex = tagRegex;
   }
 
   matches(priority: number, tag: string, message: string): boolean {

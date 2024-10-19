@@ -2,6 +2,7 @@ import {ClassRetriever} from '../class_retriever.js';
 import {ReentrantLock} from '../reentrant_lock.js';
 import * as types from '../types/index.js';
 
+import {Backtracer} from './backtracer.js';
 import {LogFilter} from './log_filter.js';
 
 export class LogTracer {
@@ -13,6 +14,7 @@ export class LogTracer {
 
   private readonly filters: LogFilter[] = [];
   private readonly filtersLock = new ReentrantLock();
+  private readonly backtracer = new Backtracer();
   private readonly onTrace: (trace: string) => void;
   private readonly logClass: types.LogType;
 
@@ -89,7 +91,7 @@ export class LogTracer {
         break;
       }
     } catch (e) {
-      // Nothing to do if tracing fails...
+      // Nothing to do if tracing fails.
     }
   }
 
@@ -97,6 +99,8 @@ export class LogTracer {
     const trace: string[] = [];
 
     trace.push(`${LogTracer.priorityToString(priority)} ${tag} : ${message}`);
+    trace.push('Backtrace:');
+    trace.push(this.backtracer.getBacktrace());
 
     return trace.join('\n');
   }
