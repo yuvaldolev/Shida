@@ -1,3 +1,5 @@
+import * as _ from 'lodash-es';
+
 import {ClassRetriever} from '../class_retriever.js';
 import {ReentrantLock} from '../reentrant_lock.js';
 import * as types from '../types/index.js';
@@ -12,11 +14,11 @@ export class LogTracer {
   static readonly LOG_PRIORITY_WARN = 5;
   static readonly LOG_PRIORITY_ERROR = 6;
 
-  private readonly filters: LogFilter[] = [];
   private readonly filtersLock = new ReentrantLock();
   private readonly backtracer = new Backtracer();
   private readonly onTrace: (trace: string) => void;
   private readonly logClass: types.LogType;
+  private filters: LogFilter[] = [];
 
   constructor(onTrace: (trace: string) => void) {
     this.onTrace = onTrace;
@@ -32,6 +34,12 @@ export class LogTracer {
       }
 
       this.filters.push(filter);
+    });
+  }
+
+  untrace(filter: LogFilter): void {
+    this.filtersLock.runExclusive(() => {
+      this.filters = this.filters.filter(item => !_.isEqual(item, filter));
     });
   }
 

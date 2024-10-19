@@ -240,4 +240,45 @@ If not specified, logs will not be filtered by maximum priority`
         new LogFilter(messageRegex, tagRegex, minimumPriority, maximumPriority),
     );
   }
+
+  @DocumentMethod(
+      `Stop tracing logs according to filters.
+IMPORTANT: The filter must exactly match a filter that was passed to the \`traceLog\` method`,
+      [
+        {
+          name: 'messageRegex',
+          type: 'RegExp',
+          optional: false,
+          description: 'Regex to filter log messages',
+        },
+        {
+          name: 'tagRegex',
+          type: 'RegExp',
+          optional: true,
+          description: 'Regex to filter log tags',
+        },
+        {
+          name: 'minimumPriority',
+          type: 'number',
+          optional: true,
+          description: 'Minimum priority to filter logs',
+        },
+        {
+          name: 'maximumPriority',
+          type: 'number',
+          optional: true,
+          description: 'Maximum priority to filter logs',
+        },
+      ],
+      )
+  stopTracingLog(
+      messageRegex: RegExp,
+      tagRegex?: RegExp,
+      minimumPriority?: number,
+      maximumPriority?: number,
+      ): void {
+    this.#logTracer.untrace(
+        new LogFilter(messageRegex, tagRegex, minimumPriority, maximumPriority),
+    );
+  }
 }
