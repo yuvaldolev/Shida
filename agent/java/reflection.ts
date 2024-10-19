@@ -11,12 +11,13 @@ export class Reflection {
         clazz = clazz.getSuperclass();
       }
     }
-    throw new Error(`No field '${fieldName}' in object ${object}`);
+
+    throw new Error(`no field '${fieldName}' in object ${object}`);
   }
 
   forEachObjectField(
       object: types.Object, callback: (field: types.Field, value: any) => void,
-      regex?: string): void {
+      regex?: RegExp): void {
     let clazz = object.getClass();
 
     while (clazz != null) {
@@ -50,7 +51,7 @@ export class Reflection {
       callback:
           (method: types.FridaJavaOverloadedMethod,
            reflectedMethod: types.Method) => void,
-      regex?: string): void {
+      regex?: RegExp): void {
     for (const reflectedMethod of clazz.class.getDeclaredMethods()) {
       if ((typeof regex !== 'undefined') &&
           (null === reflectedMethod.getName().match(regex))) {

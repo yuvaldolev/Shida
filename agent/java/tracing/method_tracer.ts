@@ -1,17 +1,11 @@
-import {ClassRetriever} from './class_retriever.js';
-import * as types from './types/index.js';
+import * as types from '../types/index.js';
 
-export class Tracer {
-  private readonly classRetriever = new ClassRetriever();
-  private readonly logClass: types.LogType;
-  private readonly exceptionClass: types.FridaJavaType;
+import {Backtracer} from './backtracer.js';
 
-  constructor() {
-    this.logClass = this.classRetriever.retrieve('android.util.Log');
-    this.exceptionClass = this.classRetriever.retrieve('java.lang.Exception')
-  }
+export class MethodTracer {
+  private readonly backtracer = new Backtracer();
 
-  traceMethod(
+  trace(
       clazz: types.FridaJavaType,
       method: types.FridaJavaMethod<any[], any, types.Object>,
       backtrace: boolean,
@@ -57,7 +51,7 @@ export class Tracer {
         }
 
         if (backtrace) {
-          trace = `${trace}\nBacktrace:\n${tracer.getBacktrace()}`;
+          trace = `${trace}\nBacktrace:\n${tracer.backtracer.getBacktrace()}`;
         }
 
         onTrace(trace);
@@ -70,14 +64,5 @@ export class Tracer {
     }
 
     onStartTracing(overload);
-  }
-
-  private getBacktrace(): string {
-    const backtrace =
-        this.logClass.getStackTraceString(this.exceptionClass.$new());
-    const lines = backtrace.split('\n');
-    lines.splice(0, 1);
-
-    return lines.join('\n');
   }
 }

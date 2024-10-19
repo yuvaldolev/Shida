@@ -1,11 +1,11 @@
 import {FridaJavaMethod} from './frida_java_method.js';
 import * as java from './java/index.js';
 
-export interface FridaJavaType {
-  $alloc: FridaJavaMethod<[], java.Object>;
+export interface FridaJavaType<T = java.Object> {
+  $alloc: FridaJavaMethod<[], T>;
   $className: string;
-  $init: FridaJavaMethod<any[], void, java.Object>;
-  $new: FridaJavaMethod<any[], java.Object>;
+  $init: FridaJavaMethod<any[], void, T>;
+  $new: FridaJavaMethod<any[], T>;
   $ownMembers: string[];
   $super: FridaJavaType;
 

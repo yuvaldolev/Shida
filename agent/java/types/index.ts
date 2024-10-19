@@ -6,5 +6,5 @@ export {FragmentActivity} from './androidx/index.js';
 export {FridaJavaField} from './frida_java_field.js';
 export {FridaJavaMethod, FridaJavaMethodOverload, FridaJavaOverloadedMethod, MethodImplementation} from './frida_java_method.js';
 export {FridaJavaType, FridaJavaTypeWrapper} from './frida_java_type.js';
-export {AccessibleObject, Class, Collection, Executable, Field, Iterable, Iterator, List, Map, Method, Object, Throwable} from './java/index.js';
+export {AccessibleObject, Class, Collection, Executable, Field, Iterable, Iterator, List, Map, Method, Object, ReentrantLock, Throwable} from './java/index.js';
 export {android, androidx};
