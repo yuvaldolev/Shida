@@ -16,7 +16,10 @@ export class TracingCli {
   readonly LOG_PRIORITY_ERROR = LogTracer.LOG_PRIORITY_ERROR;
 
   readonly #tracer = new Tracer();
-  readonly #logTracer = new LogTracer();
+  readonly #logTracer = new LogTracer(
+      trace => this.#logcatLogger.logFromThread(
+          trace, this.#process.getCurrentThreadId()),
+  );
   readonly #reflection = new Reflection();
   readonly #hooker = new Hooker();
   readonly #process = new JavaProcess();
@@ -111,7 +114,7 @@ Log each method invocation with the arguments and return value`,
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: `Regex to filter methods to trace.
   If not specified, all methods will be traced`,
@@ -125,7 +128,7 @@ Log each method invocation with the arguments and return value`,
         },
       ],
       )
-  traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
+  traceClassMethods(name: string, regex?: RegExp, backtrace: boolean = false):
       void {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name),
@@ -185,7 +188,7 @@ Log each method invocation with the arguments and return value`,
         },
       ],
       )
-  stopTracingClassMethods(name: string, regex?: string) {
+  stopTracingClassMethods(name: string, regex?: RegExp) {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name),
         (_, method) => this.stopTracingMethod(name, method.getName()),
@@ -194,20 +197,13 @@ Log each method invocation with the arguments and return value`,
   }
 
   traceLog(
-      messageRegex: string,
-      minimumLogLevel?: number,
-      maximumLogLevel?: number,
-      tagRegex?: string,
+      messageRegex: RegExp,
+      minimumPriority?: number,
+      maximumPriority?: number,
+      tagRegex?: RegExp,
   ) {
     this.#logTracer.trace(
-        new LogFilter(
-            trace => this.#logcatLogger.logFromThread(
-                trace, this.#process.getCurrentThreadId()),
-            messageRegex,
-            minimumLogLevel,
-            maximumLogLevel,
-            tagRegex,
-            ),
+        new LogFilter(messageRegex, minimumPriority, maximumPriority, tagRegex),
     );
   }
 }

@@ -1,21 +1,37 @@
 export class LogFilter {
-  private readonly onMatch: (trace: string) => void;
-  private readonly messageRegex: string;
-  private readonly minimumLogLevel?: number;
-  private readonly maximumLogLevel?: number;
-  private readonly tagRegex?: string;
+  private readonly messageRegex: RegExp;
+  private readonly minimumPriority?: number;
+  private readonly maximumPriority?: number;
+  private readonly tagRegex?: RegExp;
 
   constructor(
-      onMatch: (trace: string) => void,
-      messageRegex: string,
-      minimumLogLevel?: number,
-      maximumLogLevel?: number,
-      tagRegex?: string,
+      messageRegex: RegExp,
+      minimumPriority?: number,
+      maximumPriority?: number,
+      tagRegex?: RegExp,
   ) {
-    this.onMatch = onMatch;
     this.messageRegex = messageRegex;
-    this.minimumLogLevel = minimumLogLevel;
-    this.maximumLogLevel = maximumLogLevel;
+    this.minimumPriority = minimumPriority;
+    this.maximumPriority = maximumPriority;
     this.tagRegex = tagRegex;
+  }
+
+  matches(priority: number, tag: string, message: string): boolean {
+    if ((typeof this.minimumPriority !== 'undefined') &&
+        (priority < this.minimumPriority)) {
+      return false;
+    }
+
+    if ((typeof this.maximumPriority !== 'undefined') &&
+        (priority > this.maximumPriority)) {
+      return false;
+    }
+
+    if ((typeof this.tagRegex !== 'undefined') &&
+        (null == tag.match(this.tagRegex))) {
+      return false;
+    }
+
+    return (null != message.match(this.messageRegex));
   }
 }

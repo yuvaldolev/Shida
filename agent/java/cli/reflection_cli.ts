@@ -29,10 +29,10 @@ export class ReflectionCli {
       ],
       )
   listClassConstructors(name: string): void {
-    // const clazz = this.#classRetriever.retrieve(name);
-    // clazz.$init.overloads.forEach(
-    //     (overload: types.FridaJavaMethodOverload) =>
-    //         this.#consoleLogger.log(overload));
+    const clazz = this.#classRetriever.retrieve(name);
+    clazz.$init.overloads.forEach(
+        (overload: types.FridaJavaMethodOverload) =>
+            this.#consoleLogger.log(overload));
   }
 
   @DocumentMethod(
@@ -46,13 +46,13 @@ export class ReflectionCli {
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: 'Regex to filter the class methods',
         },
       ],
       )
-  listClassMethods(name: string, regex?: string): void {
+  listClassMethods(name: string, regex?: RegExp): void {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name), (method, _) => {
           method.overloads.forEach(
@@ -117,13 +117,13 @@ export class ReflectionCli {
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: 'Regex to filter the objects fields',
         },
       ],
       )
-  dumpAllObjectFields(object: types.Object, regex?: string): void {
+  dumpAllObjectFields(object: types.Object, regex?: RegExp): void {
     this.#reflection.forEachObjectField(
         object,
         (field, value) => this.#consoleLogger.logField(

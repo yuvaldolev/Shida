@@ -13,9 +13,12 @@ export class LogTracer {
 
   private readonly filters: LogFilter[] = [];
   private readonly filtersLock = new ReentrantLock();
+  private readonly onTrace: (trace: string) => void;
   private readonly logClass: types.LogType;
 
-  constructor() {
+  constructor(onTrace: (trace: string) => void) {
+    this.onTrace = onTrace;
+
     const classRetriever = new ClassRetriever();
     this.logClass = classRetriever.retrieve('android.util.Log');
   }
@@ -28,6 +31,32 @@ export class LogTracer {
 
       this.filters.push(filter);
     });
+  }
+
+  private static priorityToString(priority: number): string {
+    switch (priority) {
+      case LogTracer.LOG_PRIORITY_VERBOSE: {
+        return 'V';
+      }
+
+      case LogTracer.LOG_PRIORITY_DEBUG: {
+        return 'D';
+      }
+
+      case LogTracer.LOG_PRIORITY_INFO: {
+        return 'I';
+      }
+
+      case LogTracer.LOG_PRIORITY_WARN: {
+        return 'W';
+      }
+
+      case LogTracer.LOG_PRIORITY_ERROR: {
+        return 'E';
+      }
+    }
+
+    throw new Error(`unsupported log priority: ${priority}`);
   }
 
   private hookPrintlnNative(): void {
@@ -44,22 +73,31 @@ export class LogTracer {
       });
 
       return returnValue;
-    }
+    };
   }
 
   private traceLog(priority: number, tag: string, message: string): void {
-    let trace: string|null = null;
+    try {
+      for (const filter of this.filters) {
+        if (!filter.matches(priority, tag, message)) {
+          continue;
+        }
 
-    for (const filter of this.filters) {
-      if (!filter.matches(priority, tag, message)) {
-        continue;
+        const trace = this.buildTrace(priority, tag, message);
+        this.onTrace(trace);
+
+        break;
       }
-
-      if (null === trace) {
-        trace = buildTrace(priority, tag, message);
-      }
-
-      filter.onMatch(trace);
+    } catch (e) {
+      // Nothing to do if tracing fails...
     }
+  }
+
+  private buildTrace(priority: number, tag: string, message: string): string {
+    const trace: string[] = [];
+
+    trace.push(`${LogTracer.priorityToString(priority)} ${tag} : ${message}`);
+
+    return trace.join('\n');
   }
 }

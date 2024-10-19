@@ -39,7 +39,7 @@ export class UiTracer {
       onTouchEvent(this, event);
 
       return returnValue;
-    }
+    };
   }
 
   stopTracingClicks(): void {
