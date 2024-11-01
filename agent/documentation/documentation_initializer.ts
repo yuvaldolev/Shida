@@ -1,11 +1,11 @@
 export class DocumentationInitializer {
   initialize(): void {
     // @ts-ignore
-    if (typeof global._shida_documentation !== 'undefined') {
+    if (typeof global._shidaDocumentation !== 'undefined') {
       return;
     }
 
     // @ts-ignore
-    global._shida_documentation = {classes: new Map(), methods: new Map()};
+    global._shidaDocumentation = {classes: new Map(), methods: new Map()};
   }
 }

@@ -8,7 +8,7 @@ export interface ActivityThread extends java.Object {
   mActivities: FridaJavaField<java.Map>;
 }
 
-export interface ActivityThreadType extends FridaJavaType {
+export interface ActivityThreadType extends FridaJavaType<ActivityThread> {
   currentActivityThread(): ActivityThread;
 }
 

@@ -56,7 +56,10 @@ export class MethodDocumentationGenerator {
       documentation = `${documentation}, optional`;
     }
 
-    documentation = `${documentation}\n  ${parameter.description}.\n`;
+    documentation = `${documentation}\n${
+        parameter.description.split('\n')
+            .map(line => `  ${line}`)
+            .join('\n')}.\n`;
 
     if (typeof parameter.defaultValue !== 'undefined') {
       documentation =

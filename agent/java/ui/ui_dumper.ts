@@ -1,11 +1,10 @@
-import {ClassRetriever} from './class_retriever.js';
-import {IterableWrapper} from './iteration/index.js';
-import {Stringifier} from './stringifier.js';
-import {TypeCaster} from './type_caster.js';
-import * as types from './types/index.js';
+import {ClassRetriever} from '../class_retriever.js';
+import {IterableWrapper} from '../iteration/index.js';
+import {Stringifier} from '../stringifier.js';
+import {TypeCaster} from '../type_caster.js';
+import * as types from '../types/index.js';
 
 export class UiDumper {
-  private readonly classRetriever = new ClassRetriever();
   private readonly stringifier = new Stringifier();
   private readonly typeCaster = new TypeCaster();
   private readonly activityThreadClass: types.ActivityThreadType;
@@ -16,18 +15,19 @@ export class UiDumper {
   private readonly viewGroupClass: types.FridaJavaType;
 
   constructor() {
+    const classRetriever = new ClassRetriever();
+
     this.activityThreadClass =
-        this.classRetriever.retrieve('android.app.ActivityThread');
-    this.activityClientRecordClass = this.classRetriever.retrieve(
+        classRetriever.retrieve<types.ActivityThreadType>(
+            'android.app.ActivityThread');
+    this.activityClientRecordClass = classRetriever.retrieve(
         'android.app.ActivityThread$ActivityClientRecord');
     this.fragmentActivityClass =
-        this.classRetriever.retrieve('androidx.fragment.app.FragmentActivity');
-    this.androidFragmentClass =
-        this.classRetriever.retrieve('android.app.Fragment');
+        classRetriever.retrieve('androidx.fragment.app.FragmentActivity');
+    this.androidFragmentClass = classRetriever.retrieve('android.app.Fragment');
     this.androidXFragmentClass =
-        this.classRetriever.retrieve('androidx.fragment.app.Fragment');
-    this.viewGroupClass =
-        this.classRetriever.retrieve('android.view.ViewGroup');
+        classRetriever.retrieve('androidx.fragment.app.Fragment');
+    this.viewGroupClass = classRetriever.retrieve('android.view.ViewGroup');
   }
 
   dumpTopActivity(): string {

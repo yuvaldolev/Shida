@@ -1,11 +1,11 @@
-import {documentClass, documentMethod} from '../../documentation/index.js';
+import {DocumentClass, DocumentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {ClassRetriever} from '../class_retriever.js';
 import {Reflection} from '../reflection.js';
 import {Stringifier} from '../stringifier.js';
 import * as types from '../types/index.js';
 
-@documentClass(
+@DocumentClass(
     'Reflection', 'Perform Reflection-based operations on Java types')
 export class ReflectionCli {
   readonly #reflection = new Reflection();
@@ -17,7 +17,7 @@ export class ReflectionCli {
     this.#consoleLogger = consoleLogger;
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Lists class constructors',
       [
         {
@@ -35,7 +35,7 @@ export class ReflectionCli {
             this.#consoleLogger.log(overload));
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Lists class methods',
       [
         {
@@ -46,13 +46,13 @@ export class ReflectionCli {
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: 'Regex to filter the class methods',
         },
       ],
       )
-  listClassMethods(name: string, regex?: string): void {
+  listClassMethods(name: string, regex?: RegExp): void {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name), (method, _) => {
           method.overloads.forEach(
@@ -61,7 +61,7 @@ export class ReflectionCli {
         }, regex);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Retieves all class instances from the JVM',
       [
         {
@@ -80,7 +80,7 @@ export class ReflectionCli {
     return this.#reflection.getClassInstances(name);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Dumps an object field and its value to the console',
       [
         {
@@ -106,7 +106,7 @@ export class ReflectionCli {
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Dumps all object fields and their values to the console',
       [
         {
@@ -117,13 +117,13 @@ export class ReflectionCli {
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: 'Regex to filter the objects fields',
         },
       ],
       )
-  dumpAllObjectFields(object: types.Object, regex?: string): void {
+  dumpAllObjectFields(object: types.Object, regex?: RegExp): void {
     this.#reflection.forEachObjectField(
         object,
         (field, value) => this.#consoleLogger.logField(

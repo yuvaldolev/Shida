@@ -1,15 +1,25 @@
-import {documentClass, documentMethod} from '../../documentation/index.js';
+import {DocumentClass, DocumentMethod} from '../../documentation/index.js';
 import {Logger} from '../../logger/index.js';
 import {ClassRetriever} from '../class_retriever.js';
 import {Hooker} from '../hooker.js';
 import {JavaProcess} from '../java_process.js';
 import {Reflection} from '../reflection.js';
-import {Tracer} from '../tracer.js';
+import {LogFilter, LogTracer, MethodTracer} from '../tracing/index.js';
 import * as types from '../types/index.js';
 
-@documentClass('Tracing', 'Trace Java class methods')
+@DocumentClass('Tracing', 'Trace Java class methods')
 export class TracingCli {
-  readonly #tracer = new Tracer();
+  readonly LOG_PRIORITY_VERBOSE = LogTracer.LOG_PRIORITY_VERBOSE;
+  readonly LOG_PRIORITY_DEBUG = LogTracer.LOG_PRIORITY_DEBUG;
+  readonly LOG_PRIORITY_INFO = LogTracer.LOG_PRIORITY_INFO;
+  readonly LOG_PRIORITY_WARN = LogTracer.LOG_PRIORITY_WARN;
+  readonly LOG_PRIORITY_ERROR = LogTracer.LOG_PRIORITY_ERROR;
+
+  readonly #methodTracer = new MethodTracer();
+  readonly #logTracer = new LogTracer(
+      trace => this.#logcatLogger.logFromThread(
+          trace, this.#process.getCurrentThreadId()),
+  );
   readonly #reflection = new Reflection();
   readonly #hooker = new Hooker();
   readonly #process = new JavaProcess();
@@ -22,7 +32,7 @@ export class TracingCli {
     this.#logcatLogger = logcatLogger;
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace a class method.
 Log each method invocation with the arguments and return value`,
       [
@@ -49,14 +59,15 @@ Log each method invocation with the arguments and return value`,
       )
   traceMethod(
       className: string, methodName: string, backtrace: boolean = false): void {
-    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
+    const clazz =
+        this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
       return;
     }
 
-    this.#tracer.traceMethod(
+    this.#methodTracer.trace(
         clazz,
         method,
         backtrace,
@@ -68,7 +79,7 @@ Log each method invocation with the arguments and return value`,
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace all class constructors.
 Log each constructor invocation with the arguments and return value`,
       [
@@ -91,7 +102,7 @@ Log each constructor invocation with the arguments and return value`,
     this.traceMethod(name, '$init', backtrace);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       `Trace all class methods.
 Log each method invocation with the arguments and return value`,
       [
@@ -103,10 +114,10 @@ Log each method invocation with the arguments and return value`,
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: `Regex to filter methods to trace.
-  If not specified, all methods will be traced`,
+If not specified, all methods will be traced`,
         },
         {
           name: 'backtrace',
@@ -117,7 +128,7 @@ Log each method invocation with the arguments and return value`,
         },
       ],
       )
-  traceClassMethods(name: string, regex?: string, backtrace: boolean = false):
+  traceClassMethods(name: string, regex?: RegExp, backtrace: boolean = false):
       void {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name),
@@ -125,7 +136,7 @@ Log each method invocation with the arguments and return value`,
         regex);
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Stop tracing a class method',
       [
         {
@@ -143,7 +154,8 @@ Log each method invocation with the arguments and return value`,
       ],
       )
   stopTracingMethod(className: string, methodName: string): void {
-    const clazz = this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
+    const clazz =
+        this.#classRetriever.retrieve<types.FridaJavaTypeWrapper>(className);
 
     const method = clazz[methodName];
     if (typeof method === 'undefined') {
@@ -158,7 +170,7 @@ Log each method invocation with the arguments and return value`,
     );
   }
 
-  @documentMethod(
+  @DocumentMethod(
       'Stop tracing all class methods',
       [
         {
@@ -169,18 +181,104 @@ Log each method invocation with the arguments and return value`,
         },
         {
           name: 'regex',
-          type: 'string',
+          type: 'RegExp',
           optional: true,
           description: `Regex to filter methods to stop tracing.
-  If not specified, all method traces will be stopped`,
+If not specified, all method traces will be stopped`,
         },
       ],
       )
-  stopTracingClassMethods(name: string, regex?: string) {
+  stopTracingClassMethods(name: string, regex?: RegExp): void {
     this.#reflection.forEachClassMethod(
         this.#classRetriever.retrieve(name),
         (_, method) => this.stopTracingMethod(name, method.getName()),
         regex,
+    );
+  }
+
+  @DocumentMethod(
+      'Trace Logs according to filters and display a backtrace of the method that logged them',
+      [
+        {
+          name: 'messageRegex',
+          type: 'RegExp',
+          optional: false,
+          description: 'Regex to filter log messages',
+        },
+        {
+          name: 'tagRegex',
+          type: 'RegExp',
+          optional: true,
+          description: `Regex to filter log tags.
+If not specified, logs will not be filtered by tag`,
+        },
+        {
+          name: 'minimumPriority',
+          type: 'number',
+          optional: true,
+          description: `Minimum priority to filter logs.
+Logs with priority below this will not be logged.
+If not specified, logs will not be filtered by minimum priority`,
+        },
+        {
+          name: 'maximumPriority',
+          type: 'number',
+          optional: true,
+          description: `Maximum priority to filter logs.
+Logs with priority above this will not be logged.
+If not specified, logs will not be filtered by maximum priority`
+        },
+      ],
+      )
+  traceLog(
+      messageRegex: RegExp,
+      tagRegex?: RegExp,
+      minimumPriority?: number,
+      maximumPriority?: number,
+      ): void {
+    this.#logTracer.trace(
+        new LogFilter(messageRegex, tagRegex, minimumPriority, maximumPriority),
+    );
+  }
+
+  @DocumentMethod(
+      `Stop tracing logs according to filters.
+IMPORTANT: The filter must exactly match a filter that was passed to the \`traceLog\` method`,
+      [
+        {
+          name: 'messageRegex',
+          type: 'RegExp',
+          optional: false,
+          description: 'Regex to filter log messages',
+        },
+        {
+          name: 'tagRegex',
+          type: 'RegExp',
+          optional: true,
+          description: 'Regex to filter log tags',
+        },
+        {
+          name: 'minimumPriority',
+          type: 'number',
+          optional: true,
+          description: 'Minimum priority to filter logs',
+        },
+        {
+          name: 'maximumPriority',
+          type: 'number',
+          optional: true,
+          description: 'Maximum priority to filter logs',
+        },
+      ],
+      )
+  stopTracingLog(
+      messageRegex: RegExp,
+      tagRegex?: RegExp,
+      minimumPriority?: number,
+      maximumPriority?: number,
+      ): void {
+    this.#logTracer.untrace(
+        new LogFilter(messageRegex, tagRegex, minimumPriority, maximumPriority),
     );
   }
 }
