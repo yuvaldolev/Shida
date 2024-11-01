@@ -7,7 +7,7 @@ export function DocumentClass(name: string, description: string): any {
     documentation_initializer.initialize();
 
     // @ts-ignore
-    global._shidaDocumentation.classes.set(
+    global._shdoc.classes.set(
         clazz.prototype,
         new ClassDocumentationDescriptor(name, description),
     );

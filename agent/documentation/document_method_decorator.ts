@@ -12,7 +12,7 @@ export function DocumentMethod(
     documentation_initializer.initialize();
 
     // @ts-ignore
-    global._shidaDocumentation.methods.set(
+    global._shdoc.methods.set(
         descriptor.value,
         new MethodDocumentationDescriptor(
             propertyKey, description, parameters, returnValue),
