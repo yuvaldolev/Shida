@@ -3,5 +3,9 @@
 version = 3
 
 [[package]]
-name = "shida"
+name = "shida_main"
+version = "0.1.0"
+
+[[package]]
+name = "shida_python_virtual_environment"
 version = "0.1.0"

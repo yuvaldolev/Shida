@@ -1,6 +1,7 @@
-[package]
-name = "shida"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
+[workspace]
+resolver = "2"
+default-members = ["shida/crates/shida_main"]
+members = [
+    "shida/crates/shida_main",
+    "shida/crates/shida_python_virtual_environment",
+]
