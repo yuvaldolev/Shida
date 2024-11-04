@@ -1,8 +1,7 @@
 [package]
-name = "shida_main"
+name = "shida"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shida = { path = "../shida" }
 shida_python_virtual_environment = { path = "../shida_python_virtual_environment" }

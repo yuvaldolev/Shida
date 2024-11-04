@@ -3,8 +3,19 @@
 version = 3
 
 [[package]]
+name = "shida"
+version = "0.1.0"
+dependencies = [
+ "shida_python_virtual_environment",
+]
+
+[[package]]
 name = "shida_main"
 version = "0.1.0"
+dependencies = [
+ "shida",
+ "shida_python_virtual_environment",
+]
 
 [[package]]
 name = "shida_python_virtual_environment"
