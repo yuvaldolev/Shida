@@ -1,0 +1,8 @@
+[package]
+name = "shida_data_directory"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dirs = "5.0.1"
+shida_error = { path = "../shida_error" }

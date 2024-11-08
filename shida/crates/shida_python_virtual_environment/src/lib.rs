@@ -1,3 +1,7 @@
-mod python_virtual_environment;
+pub struct PythonVirtualEnvironment;
 
-pub use python_virtual_environment::PythonVirtualEnvironment;
+impl PythonVirtualEnvironment {
+    pub fn new() -> Self {
+        Self
+    }
+}

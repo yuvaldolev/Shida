@@ -1,8 +1,13 @@
 use shida::Shida;
-use shida_python_virtual_environment::PythonVirtualEnvironment;
+use shida_configuration::EnvironmentConfiguration;
 
-fn main() {
-    let python_virtual_environment = PythonVirtualEnvironment::new();
-    let shida = Shida::new(python_virtual_environment);
+fn main() -> anyhow::Result<()> {
+    dotenv::dotenv().ok();
+
+    let configuration = EnvironmentConfiguration::new();
+
+    let shida = Shida::new(&configuration);
     shida.run();
+
+    Ok(())
 }

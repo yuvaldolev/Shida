@@ -1,13 +1,21 @@
-use shida_python_virtual_environment::PythonVirtualEnvironment;
+use shida_configuration::Configuration;
+use shida_repl::Repl;
 
 pub struct Shida {
-    python_virtual_environment: PythonVirtualEnvironment,
+    repl: Repl,
 }
 
 impl Shida {
-    pub fn new(python_virtual_environment: PythonVirtualEnvironment) -> Self {
+    pub fn new(configuration: &impl Configuration) -> Self {
         Self {
-            python_virtual_environment,
+            repl: Self::make_repl(configuration),
         }
+    }
+
+    pub fn run(&self) {}
+
+    fn make_repl(cofiguration: &impl Configuration) -> Repl {
+        //let python_virtual_environment = PythonVirtualEnvironment::new();
+        Repl::new()
     }
 }
