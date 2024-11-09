@@ -1,9 +1,8 @@
 [package]
-name = "shida_error"
+name = "shida_python"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-reqwest = "0.12.9"
-thiserror = "2.0.0"
 which = "7.0.0"
+shida_error = { path = "../shida_error" }

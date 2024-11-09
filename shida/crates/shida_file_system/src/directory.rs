@@ -19,7 +19,7 @@ impl Directory {
         &self.path
     }
 
-    pub fn get_sub_path(&self, sub_path: &Path) -> PathBuf {
+    pub fn get_sub_path(&self, sub_path: impl AsRef<Path>) -> PathBuf {
         let mut path = self.path.clone();
         path.push(sub_path);
 

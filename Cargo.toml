@@ -8,6 +8,7 @@ members = [
     "shida/crates/shida_error",
     "shida/crates/shida_file_system",
     "shida/crates/shida_main",
+    "shida/crates/shida_python",
     "shida/crates/shida_python_virtual_environment",
     "shida/crates/shida_repl",
 ]
