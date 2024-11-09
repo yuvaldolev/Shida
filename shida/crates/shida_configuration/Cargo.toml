@@ -1,6 +1,0 @@
-[package]
-name = "shida_configuration"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]

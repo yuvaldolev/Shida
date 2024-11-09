@@ -113,13 +113,8 @@ dependencies = [
 name = "shida"
 version = "0.1.0"
 dependencies = [
- "shida_configuration",
  "shida_repl",
 ]
-
-[[package]]
-name = "shida_configuration"
-version = "0.1.0"
 
 [[package]]
 name = "shida_data_directory"
@@ -143,12 +138,14 @@ dependencies = [
  "anyhow",
  "dotenv",
  "shida",
- "shida_configuration",
 ]
 
 [[package]]
 name = "shida_python_virtual_environment"
 version = "0.1.0"
+dependencies = [
+ "shida_data_directory",
+]
 
 [[package]]
 name = "shida_repl"

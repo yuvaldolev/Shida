@@ -2,25 +2,26 @@ use std::path::{Path, PathBuf};
 
 use shida_python_virtual_environment::PythonVirtualEnvironment;
 
-use crate::Repl;
+use crate::{Repl, ReplConfiguration};
 
-pub struct ReplFactory {}
+pub struct ReplFactory;
 
 impl ReplFactory {
     pub fn new() -> Self {
-        Self {}
+        Self
     }
 
-    pub fn make(&self, repl_path: Option<&Path>) -> Repl {
+    pub fn make(&self, configuration: &ReplConfiguration) -> Repl {
         Repl::new(
-            repl_path
+            configuration
+                .get_path()
                 .map(Path::to_path_buf)
                 .unwrap_or_else(|| self.retrieve_virtualized_repl_path()),
         )
     }
 
     fn retrieve_virtualized_repl_path(&self) -> PathBuf {
-        let python_virtual_environemnt = PythonVirtualEnvironment::new(data_directory);
+        // let python_virtual_environemnt = PythonVirtualEnvironment::new(data_directory);
         PathBuf::new()
     }
 }

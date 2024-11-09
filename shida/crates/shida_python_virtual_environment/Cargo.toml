@@ -4,3 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+shida_data_directory = { path = "../shida_data_directory" }

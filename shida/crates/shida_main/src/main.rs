@@ -1,10 +1,10 @@
-use shida::Shida;
-use shida_configuration::EnvironmentConfiguration;
+use shida::{EnvironmentShidaConfigurationFactory, Shida, ShidaConfigurationFactory};
 
 fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
 
-    let configuration = EnvironmentConfiguration::new();
+    let configuration_factory = EnvironmentShidaConfigurationFactory::new();
+    let configuration = configuration_factory.make();
 
     let shida = Shida::new(&configuration);
     shida.run();

@@ -1,4 +1,9 @@
-use shida_configuration::Configuration;
+mod shida_configuration;
+
+pub use shida_configuration::{
+    EnvironmentShidaConfigurationFactory, ShidaConfiguration, ShidaConfigurationFactory,
+};
+
 use shida_repl::{Repl, ReplFactory};
 
 pub struct Shida {
@@ -6,12 +11,12 @@ pub struct Shida {
 }
 
 impl Shida {
-    pub fn new(configuration: &impl Configuration) -> Self {
+    pub fn new(configuration: &ShidaConfiguration) -> Self {
         // let data_directory = DataDirectory::new(configuration.get_data_directory_path());
         let repl_factory = ReplFactory::new();
 
         Self {
-            repl: repl_factory.make(configuration.get_repl_path()),
+            repl: repl_factory.make(configuration.get_repl_configuration()),
         }
     }
 
