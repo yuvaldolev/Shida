@@ -4,4 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+shida_error = { path = "../shida_error" }
+shida_file_system = { path = "../shida_file_system" }
 shida_python_virtual_environment = { path = "../shida_python_virtual_environment" }

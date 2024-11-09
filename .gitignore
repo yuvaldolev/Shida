@@ -1,6 +1,7 @@
 dist/
 node_modules/
-/target
+/target/
+/shida_data/
 
 *.js
 *.d.ts

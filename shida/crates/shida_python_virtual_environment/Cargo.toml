@@ -4,4 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shida_data_directory = { path = "../shida_data_directory" }
+reqwest = { version = "0.12.9", features = ["blocking"] }
+shida_error = { path = "../shida_error" }
+shida_file_system = { path = "../shida_file_system" }

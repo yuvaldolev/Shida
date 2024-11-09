@@ -7,3 +7,4 @@ edition = "2021"
 anyhow = "1.0.93"
 dotenv = "0.15.0"
 shida = { path = "../shida" }
+shida_configuration_factory = { path = "../shida_configuration_factory" }
