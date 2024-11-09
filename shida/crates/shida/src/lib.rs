@@ -1,5 +1,5 @@
 use shida_configuration::Configuration;
-use shida_repl::Repl;
+use shida_repl::{Repl, ReplFactory};
 
 pub struct Shida {
     repl: Repl,
@@ -7,15 +7,13 @@ pub struct Shida {
 
 impl Shida {
     pub fn new(configuration: &impl Configuration) -> Self {
+        // let data_directory = DataDirectory::new(configuration.get_data_directory_path());
+        let repl_factory = ReplFactory::new();
+
         Self {
-            repl: Self::make_repl(configuration),
+            repl: repl_factory.make(configuration.get_repl_path()),
         }
     }
 
     pub fn run(&self) {}
-
-    fn make_repl(cofiguration: &impl Configuration) -> Repl {
-        //let python_virtual_environment = PythonVirtualEnvironment::new();
-        Repl::new()
-    }
 }

@@ -5,5 +5,4 @@ edition = "2021"
 
 [dependencies]
 shida_configuration = { path = "../shida_configuration" }
-shida_python_virtual_environment = { path = "../shida_python_virtual_environment" }
 shida_repl = { path = "../shida_repl" }

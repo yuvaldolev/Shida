@@ -114,7 +114,6 @@ name = "shida"
 version = "0.1.0"
 dependencies = [
  "shida_configuration",
- "shida_python_virtual_environment",
  "shida_repl",
 ]
 
@@ -154,6 +153,9 @@ version = "0.1.0"
 [[package]]
 name = "shida_repl"
 version = "0.1.0"
+dependencies = [
+ "shida_python_virtual_environment",
+]
 
 [[package]]
 name = "syn"
