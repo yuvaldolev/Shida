@@ -14,6 +14,11 @@ impl PythonVirtualEnvironment {
         let path = data_directory.get_sub_path(VIRTUAL_ENVIRONMENT_SUB_PATH);
         Self::create_virtual_environment(&path, data_directory)?;
 
+        tracing::info!(
+            "Initialized Python virtual environment at path '{}'",
+            path.display()
+        );
+
         Ok(Self)
     }
 

@@ -24,7 +24,12 @@ impl Virtualenv {
 
         let zipapp_path = directory.get_sub_path(VIRTUALENV_ZIPAPP_SUB_PATH);
 
-        Self::initialize(&zipapp_path)?;
+        Self::initialize_zipapp(&zipapp_path)?;
+
+        tracing::info!(
+            "Initialized virtualenv with zipapp at path '{}'",
+            zipapp_path.display()
+        );
 
         Ok(Self {
             python,
@@ -33,6 +38,11 @@ impl Virtualenv {
     }
 
     pub fn create_virtual_environment(&self, path: &Path) -> shida_error::Result<()> {
+        tracing::debug!(
+            "Creating a new virtual environment at path '{}'",
+            path.display()
+        );
+
         let output = self
             .python
             .make_command()
@@ -59,27 +69,29 @@ impl Virtualenv {
         Ok(())
     }
 
-    fn initialize(zipapp_path: &Path) -> shida_error::Result<()> {
-        if !zipapp_path.exists() {
-            return Self::download(zipapp_path);
+    fn initialize_zipapp(path: &Path) -> shida_error::Result<()> {
+        if !path.exists() {
+            return Self::download_zipapp(path);
         }
 
-        if !zipapp_path.is_file() {
+        if !path.is_file() {
             return Err(shida_error::Error::VirtualenvZipappPathExistsButIsNotAFile(
-                zipapp_path.display().to_string(),
+                path.display().to_string(),
             ));
         }
 
         Ok(())
     }
 
-    fn download(zipapp_path: &Path) -> shida_error::Result<()> {
+    fn download_zipapp(path: &Path) -> shida_error::Result<()> {
+        tracing::debug!("Downloading virtualenv to path '{}'", path.display());
+
         let mut zipapp_file = File::options()
             .write(true)
             .create_new(true)
-            .open(zipapp_path)
+            .open(path)
             .map_err(|e| {
-                shida_error::Error::CreateVirtualenvZipappFile(e, zipapp_path.display().to_string())
+                shida_error::Error::CreateVirtualenvZipappFile(e, path.display().to_string())
             })?;
 
         let mut response = reqwest::blocking::get(VIRTUALENV_ZIPAPP_DOWNLOAD_URL).map_err(|e| {
@@ -90,7 +102,7 @@ impl Virtualenv {
         })?;
 
         io::copy(&mut response, &mut zipapp_file).map_err(|e| {
-            shida_error::Error::WriteVirtualenvZipappToFile(e, zipapp_path.display().to_string())
+            shida_error::Error::WriteVirtualenvZipappToFile(e, path.display().to_string())
         })?;
 
         Ok(())

@@ -8,3 +8,5 @@ anyhow = "1.0.93"
 dotenv = "0.15.0"
 shida = { path = "../shida" }
 shida_configuration_factory = { path = "../shida_configuration_factory" }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }

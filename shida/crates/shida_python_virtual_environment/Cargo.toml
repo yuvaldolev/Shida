@@ -8,3 +8,4 @@ reqwest = { version = "0.12.9", features = ["blocking"] }
 shida_error = { path = "../shida_error" }
 shida_file_system = { path = "../shida_file_system" }
 shida_python = { path = "../shida_python" }
+tracing = "0.1.40"

@@ -12,6 +12,7 @@ pub struct Repl {
 
 impl Repl {
     pub fn new(path: PathBuf) -> Self {
+        tracing::info!("Initialized REPL at path '{}'", path.display());
         Self { path }
     }
 }

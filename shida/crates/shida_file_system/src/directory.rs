@@ -28,6 +28,7 @@ impl Directory {
 
     fn create_directory(path: &Path) -> shida_error::Result<()> {
         if !path.exists() {
+            tracing::debug!("Creating a new directory at path '{}'", path.display());
             return fs::create_dir_all(path)
                 .map_err(|e| shida_error::Error::CreateDirectory(e, path.display().to_string()));
         }

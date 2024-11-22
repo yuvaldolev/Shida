@@ -15,13 +15,13 @@ impl ReplFactory {
     }
 
     pub fn make(&self, configuration: &ReplConfiguration) -> shida_error::Result<Repl> {
-        Ok(Repl::new(
-            configuration
-                .get_path()
-                .map(Path::to_path_buf)
-                .ok_or(())
-                .or_else(|_| self.retrieve_virtualized_repl_path())?,
-        ))
+        let path = configuration
+            .get_path()
+            .map(Path::to_path_buf)
+            .ok_or(())
+            .or_else(|_| self.retrieve_virtualized_repl_path())?;
+
+        Ok(Repl::new(path))
     }
 
     fn retrieve_virtualized_repl_path(&self) -> shida_error::Result<PathBuf> {
