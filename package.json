@@ -1,12 +1,12 @@
 {
-  "name": "shida",
+  "name": "shida_agent",
   "version": "1.0.0",
   "description": "Interactive Frida Shell for Researchers",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "frida-compile agent/index.ts -o dist/_agent.js -c",
-    "watch": "frida-compile agent/index.ts -o dist/_agent.js -w",
+    "build": "frida-compile shida_agent/index.ts -o dist/_agent.js -c",
+    "watch": "frida-compile shida_agent/index.ts -o dist/_agent.js -w",
     "shida": "npm run build && shida-repl -U -l dist/_agent.js"
   },
   "keywords": [],

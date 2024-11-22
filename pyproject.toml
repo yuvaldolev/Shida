@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "repl"
+name = "shida-repl"
 version = "0.1.0"
 description = ""
 authors = ["Yuval Dolev <mail@ydolev.com>"]
@@ -10,7 +10,7 @@ python = "^3.12"
 frida-tools = "^13.6.0"
 
 [tool.poetry.scripts]
-shida-repl = "repl.main:main"
+shida-repl = "shida_repl.main:main"
 
 [build-system]
 requires = ["poetry-core"]
