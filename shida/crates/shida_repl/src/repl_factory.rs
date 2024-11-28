@@ -19,12 +19,12 @@ impl ReplFactory {
             .get_path()
             .map(Path::to_path_buf)
             .ok_or(())
-            .or_else(|_| self.retrieve_virtualized_repl_path())?;
+            .or_else(|_| self.retrieve_virtualized_repl_path(configuration.get_download_url()))?;
 
         Ok(Repl::new(path))
     }
 
-    fn retrieve_virtualized_repl_path(&self) -> shida_error::Result<PathBuf> {
+    fn retrieve_virtualized_repl_path(&self, download_url: &str) -> shida_error::Result<PathBuf> {
         let python_virtual_environemnt = PythonVirtualEnvironment::new(&self.data_directory)?;
 
         Ok(PathBuf::new())

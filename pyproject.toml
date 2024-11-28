@@ -12,6 +12,8 @@ frida-tools = "^13.6.0"
 [tool.poetry.scripts]
 shida-repl = "shida_repl.main:main"
 
+[tool.poetry.group.dev.dependencies]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

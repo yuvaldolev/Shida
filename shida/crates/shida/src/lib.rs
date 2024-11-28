@@ -17,10 +17,11 @@ impl Shida {
 
         let repl_factory = ReplFactory::new(data_directory);
         let repl = repl_factory.make(configuration.get_repl_configuration())?;
-        // TODO: repl.run(agent);
 
         Ok(Self { repl })
     }
 
-    pub fn run(&self) {}
+    pub fn run(&self) {
+        // TODO: repl.run(agent);
+    }
 }
