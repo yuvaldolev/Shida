@@ -26,6 +26,10 @@ impl Directory {
         path
     }
 
+    pub fn get_sub_directory(&self, sub_path: impl AsRef<Path>) -> shida_error::Result<Directory> {
+        Self::new(self.get_sub_path(sub_path))
+    }
+
     fn create_directory(path: &Path) -> shida_error::Result<()> {
         if !path.exists() {
             tracing::debug!("Creating a new directory at path '{}'", path.display());

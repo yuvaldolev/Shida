@@ -36,4 +36,10 @@ pub enum Error {
         "failed creating Python virtual environment at path '{0}': stdout='{1}', stderr='{2}'"
     )]
     CreatePythonVirtualEnvironment(String, String, String),
+
+    #[error("failed executing 'pip install' using pip '{1}' to install '{2}'")]
+    ExecutePipInstall(#[source] io::Error, String, String),
+
+    #[error("failed installing pip package '{0}': stdout='{1}', stderr='{2}'")]
+    InstallPipPackage(String, String, String),
 }
