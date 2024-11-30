@@ -3,7 +3,7 @@ resolver = "2"
 default-members = ["shida/crates/shida_main"]
 members = [
     "shida/crates/shida",
-    "shida/crates/shida_configuration_factory",
+    "shida/crates/shida_agent",
     "shida/crates/shida_data_directory",
     "shida/crates/shida_error",
     "shida/crates/shida_file_system",

@@ -7,4 +7,4 @@ edition = "2021"
 shida_error = { path = "../shida_error" }
 shida_file_system = { path = "../shida_file_system" }
 shida_python_virtual_environment = { path = "../shida_python_virtual_environment" }
-tracing = "0.1.40"
+tracing = "0.1.41"

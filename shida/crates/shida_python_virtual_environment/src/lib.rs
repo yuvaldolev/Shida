@@ -54,11 +54,22 @@ impl PythonVirtualEnvironment {
                 )
             })?;
 
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+
+        tracing::debug!(
+            "pip install '{}' result: status='{}', stdout='{}', stderr='{}'",
+            package,
+            output.status,
+            stdout,
+            stderr
+        );
+
         if !output.status.success() {
             return Err(shida_error::Error::InstallPipPackage(
                 package.to_owned(),
-                String::from_utf8_lossy(&output.stdout).into_owned(),
-                String::from_utf8_lossy(&output.stderr).into_owned(),
+                stdout.into_owned(),
+                stderr.into_owned(),
             ));
         }
 
@@ -95,6 +106,6 @@ impl PythonVirtualEnvironment {
             );
         }
 
-        return Ok(());
+        Ok(())
     }
 }

@@ -32,10 +32,7 @@ impl DataDirectoryFactory {
 
     fn compute_default_path() -> shida_error::Result<PathBuf> {
         tracing::debug!("Computing default data directory path");
-        let mut path = PathBuf::new();
-        path.push(dirs::data_dir().ok_or_else(|| shida_error::Error::NoUserDataDirectory)?);
-        path.push(DEFAULT_DATA_SUB_DIRECTORY);
 
-        Ok(path)
+        Ok(PathBuf::new())
     }
 }

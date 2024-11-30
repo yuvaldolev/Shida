@@ -7,4 +7,4 @@ edition = "2021"
 dirs = "5.0.1"
 shida_error = { path = "../shida_error" }
 shida_file_system = { path = "../shida_file_system" }
-tracing = "0.1.40"
+tracing = "0.1.41"

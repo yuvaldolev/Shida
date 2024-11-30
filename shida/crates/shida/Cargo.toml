@@ -7,3 +7,5 @@ edition = "2021"
 shida_data_directory = { path = "../shida_data_directory" }
 shida_error = { path = "../shida_error" }
 shida_repl = { path = "../shida_repl" }
+shida_agent = { path = "../shida_agent" }
+serde = { version = "1.0.215", features = ["derive"] }

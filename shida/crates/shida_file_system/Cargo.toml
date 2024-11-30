@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 shida_error = { path = "../shida_error" }
-tracing = "0.1.40"
+tracing = "0.1.41"

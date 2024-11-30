@@ -1,6 +1,13 @@
+mod configuration_factory;
+mod figment_configuration_factory;
+
+pub use configuration_factory::ConfigurationFactory;
+pub use figment_configuration_factory::FigmentConfigurationFactory;
+
 use shida_data_directory::DataDirectoryConfiguration;
 use shida_repl::ReplConfiguration;
 
+#[derive(Default)]
 pub struct ShidaConfiguration {
     data_directory_configuration: DataDirectoryConfiguration,
     repl_configuration: ReplConfiguration,

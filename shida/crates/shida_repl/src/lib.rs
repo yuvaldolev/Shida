@@ -1,10 +1,10 @@
 mod repl_configuration;
 mod repl_factory;
 
-use std::path::PathBuf;
-
 pub use repl_configuration::ReplConfiguration;
 pub use repl_factory::ReplFactory;
+
+use std::path::PathBuf;
 
 pub struct Repl {
     path: PathBuf,
